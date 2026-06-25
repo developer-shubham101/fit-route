@@ -8,6 +8,10 @@ import 'models/workout_entry.dart';
 import 'models/program.dart';
 import 'screens/root_router.dart';
 import 'state/app_state.dart';
+import 'services/seed_service.dart';
+import 'services/workout_entry_service.dart';
+import 'services/program_service.dart';
+import 'services/prefs_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -19,6 +23,12 @@ void main() async {
   Hive.registerAdapter(ProgramExerciseAdapter());
   Hive.registerAdapter(ProgramDayAdapter());
   Hive.registerAdapter(ProgramAdapter());
+  // Seed sample data on first run
+  await SeedService(
+    WorkoutEntryService(),
+    ProgramService(),
+    PrefsService(),
+  ).seedIfNeeded();
   runApp(const ProviderScope(child: FitRouteApp()));
 }
 

@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../state/routines_state.dart';
-// ...existing code...
-import 'routine_detail_screen.dart';
-import 'history_screen.dart';
 import '../state/workout_state.dart';
+import 'routine_detail_screen.dart';
+import 'new_routine_screen.dart';
+import 'dashboard_screen.dart';
+import 'history_screen.dart';
 import 'settings_screen.dart';
 import 'trends_screen.dart';
-import 'explore/explore_exercises_screen.dart';
-import 'new_routine_screen.dart';
 import 'programs/programs_screen.dart';
+import 'explore/explore_exercises_screen.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
@@ -19,19 +19,131 @@ class HomeScreen extends ConsumerStatefulWidget {
 }
 
 class _HomeScreenState extends ConsumerState<HomeScreen> {
+  int _navIndex = 0;
+
+  @override
+  Widget build(BuildContext context) {
+    ref.read(entriesProvider.notifier).load();
+    return Scaffold(
+      body: IndexedStack(
+        index: _navIndex,
+        children: const [
+          _HomeTab(),
+          HistoryScreen(),
+          TrendsScreen(),
+          ProgramsScreen(),
+          SettingsScreen(),
+        ],
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _navIndex,
+        onTap: (i) => setState(() => _navIndex = i),
+        type: BottomNavigationBarType.fixed,
+        items: const [
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+          BottomNavigationBarItem(icon: Icon(Icons.history), label: 'History'),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.bar_chart), label: 'Trends'),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.calendar_month), label: 'Programs'),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.settings), label: 'Settings'),
+        ],
+      ),
+    );
+  }
+}
+
+// ── Home tab: Dashboard + Routines tabs ───────────────────────────────────────
+class _HomeTab extends ConsumerStatefulWidget {
+  const _HomeTab();
+
+  @override
+  ConsumerState<_HomeTab> createState() => _HomeTabState();
+}
+
+class _HomeTabState extends ConsumerState<_HomeTab>
+    with SingleTickerProviderStateMixin {
+  late final TabController _tabController;
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: 2, vsync: this);
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('FitRoute'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.explore),
+            tooltip: 'Explore',
+            onPressed: () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (_) => const ExploreExercisesScreen()),
+            ),
+          ),
+        ],
+        bottom: TabBar(
+          controller: _tabController,
+          tabs: const [
+            Tab(icon: Icon(Icons.dashboard), text: 'Dashboard'),
+            Tab(icon: Icon(Icons.list), text: 'Routines'),
+          ],
+        ),
+      ),
+      body: TabBarView(
+        controller: _tabController,
+        children: const [
+          DashboardScreen(),
+          _RoutinesTab(),
+        ],
+      ),
+      floatingActionButton: ListenableBuilder(
+        listenable: _tabController,
+        builder: (context, _) {
+          if (_tabController.index != 1) return const SizedBox.shrink();
+          return FloatingActionButton(
+            onPressed: () => Navigator.push(
+              context,
+              MaterialPageRoute(builder: (_) => const NewRoutineScreen()),
+            ),
+            tooltip: 'Add Routine',
+            child: const Icon(Icons.add),
+          );
+        },
+      ),
+    );
+  }
+}
+
+// ── Routines tab ──────────────────────────────────────────────────────────────
+class _RoutinesTab extends ConsumerStatefulWidget {
+  const _RoutinesTab();
+
+  @override
+  ConsumerState<_RoutinesTab> createState() => _RoutinesTabState();
+}
+
+class _RoutinesTabState extends ConsumerState<_RoutinesTab> {
   String selectedGoal = 'All';
   String selectedLevel = 'All';
   String selectedEquipment = 'All';
 
   @override
   Widget build(BuildContext context) {
-    final ref = this.ref;
-    // Preload entries
-    ref.read(entriesProvider.notifier).load();
-
     final routines = ref.watch(routinesProvider);
 
-    // Build filter option lists from available routines
     final goals = <String>{'All'}
       ..addAll(routines.map((r) => r.goal).where((g) => g.isNotEmpty));
     final levels = <String>{'All'}
@@ -42,9 +154,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         if (e.trim().isNotEmpty) equipmentSet.add(e);
       }
     }
-    final equipments = equipmentSet.toList();
 
-    // Apply filters
     final filtered = routines.where((r) {
       if (selectedGoal != 'All' && r.goal != selectedGoal) return false;
       if (selectedLevel != 'All' && r.level != selectedLevel) return false;
@@ -53,25 +163,21 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       return true;
     }).toList();
 
-    // ...existing code...
-
-    Future<void> renameRoutineDialog(
-        String routineId, String currentName) async {
-      final nameController = TextEditingController(text: currentName);
+    Future<void> renameDialog(String routineId, String current) async {
+      final ctrl = TextEditingController(text: current);
       final result = await showDialog<String>(
         context: context,
-        builder: (context) => AlertDialog(
+        builder: (ctx) => AlertDialog(
           title: const Text('Rename Routine'),
           content: TextField(
-            controller: nameController,
-            decoration: const InputDecoration(labelText: 'Routine name'),
-          ),
+              controller: ctrl,
+              decoration: const InputDecoration(labelText: 'Routine name')),
           actions: [
             TextButton(
-                onPressed: () => Navigator.pop(context),
+                onPressed: () => Navigator.pop(ctx),
                 child: const Text('Cancel')),
             ElevatedButton(
-                onPressed: () => Navigator.pop(context, nameController.text),
+                onPressed: () => Navigator.pop(ctx, ctrl.text),
                 child: const Text('Save')),
           ],
         ),
@@ -83,8 +189,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       }
     }
 
-    Future<void> confirmDeleteRoutine(int index, String name) async {
-      final confirmed = await showDialog<bool>(
+    Future<void> confirmDelete(int index, String name) async {
+      final ok = await showDialog<bool>(
         context: context,
         builder: (_) => AlertDialog(
           title: const Text('Delete routine?'),
@@ -99,184 +205,103 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           ],
         ),
       );
-      if (confirmed == true) {
+      if (ok == true) {
         await ref.read(routinesProvider.notifier).deleteRoutineAt(index);
       }
     }
 
-    return Scaffold(
-      appBar: AppBar(title: const Text('FitRoute Home')),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Text('Your Routines',
-                    style:
-                        TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-                TextButton.icon(
-                  onPressed: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (_) => const ExploreExercisesScreen()));
-                  },
-                  icon: const Icon(Icons.explore),
-                  label: const Text('Explore'),
-                ),
-              ],
-            ),
-            const SizedBox(height: 12),
-            // Filters: Goal, Level, Equipment
-            Wrap(
-              spacing: 12,
-              runSpacing: 8,
-              children: [
-                DropdownButton<String>(
-                  value: selectedGoal,
-                  items: goals
-                      .map((g) => DropdownMenuItem(value: g, child: Text(g)))
-                      .toList(),
-                  onChanged: (v) {
-                    if (v == null) return;
-                    setState(() => selectedGoal = v);
-                  },
-                ),
-                DropdownButton<String>(
-                  value: selectedLevel,
-                  items: levels
-                      .map((l) => DropdownMenuItem(value: l, child: Text(l)))
-                      .toList(),
-                  onChanged: (v) {
-                    if (v == null) return;
-                    setState(() => selectedLevel = v);
-                  },
-                ),
-                DropdownButton<String>(
-                  value: selectedEquipment,
-                  items: equipments
-                      .map((e) => DropdownMenuItem(value: e, child: Text(e)))
-                      .toList(),
-                  onChanged: (v) {
-                    if (v == null) return;
-                    setState(() => selectedEquipment = v);
-                  },
-                ),
-                TextButton(
-                  onPressed: () => setState(() {
-                    selectedGoal = 'All';
-                    selectedLevel = 'All';
-                    selectedEquipment = 'All';
-                  }),
-                  child: const Text('Clear Filters'),
-                ),
-              ],
-            ),
-            const SizedBox(height: 12),
-            if (routines.isEmpty)
-              const Text('No routines yet. Tap + to add your first routine.')
-            else
-              Expanded(
-                child: ListView.separated(
-                  itemCount: filtered.length,
-                  separatorBuilder: (_, __) => const Divider(height: 1),
-                  itemBuilder: (context, idx) {
-                    final routine = filtered[idx];
-                    return ListTile(
-                      title: Text(routine.name),
-                      subtitle: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text('${routine.exercises.length} exercises'),
-                          Text(
-                              'Goal: ${routine.goal.isNotEmpty ? routine.goal : '—'}  •  Level: ${routine.level.isNotEmpty ? routine.level : '—'}'),
-                          Text(
-                              'Equipment: ${routine.equipmentNeeded.isNotEmpty ? routine.equipmentNeeded.join(', ') : 'None'}'),
-                        ],
-                      ),
-                      onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (_) => RoutineDetailScreen(
-                                    routineId: routine.id)));
-                      },
-                      trailing: PopupMenuButton<String>(
-                        onSelected: (value) {
-                          if (value == 'rename') {
-                            renameRoutineDialog(routine.id, routine.name);
-                          } else if (value == 'delete') {
-                            confirmDeleteRoutine(idx, routine.name);
-                          }
-                        },
-                        itemBuilder: (context) => const [
-                          PopupMenuItem(value: 'rename', child: Text('Rename')),
-                          PopupMenuItem(value: 'delete', child: Text('Delete')),
-                        ],
-                      ),
-                    );
-                  },
-                ),
+    return Padding(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Wrap(
+            spacing: 12,
+            runSpacing: 8,
+            children: [
+              DropdownButton<String>(
+                value: selectedGoal,
+                items: goals
+                    .map((g) => DropdownMenuItem(value: g, child: Text(g)))
+                    .toList(),
+                onChanged: (v) {
+                  if (v != null) setState(() => selectedGoal = v);
+                },
               ),
-            const SizedBox(height: 12),
-            Wrap(
-              spacing: 12,
-              children: [
-                ElevatedButton.icon(
-                  onPressed: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (_) => const ProgramsScreen()));
-                  },
-                  icon: const Icon(Icons.calendar_month),
-                  label: const Text('Programs'),
-                ),
-                ElevatedButton.icon(
-                  onPressed: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (_) => const HistoryScreen()));
-                  },
-                  icon: const Icon(Icons.history),
-                  label: const Text('History'),
-                ),
-                ElevatedButton.icon(
-                  onPressed: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (_) => const TrendsScreen()));
-                  },
-                  icon: const Icon(Icons.bar_chart),
-                  label: const Text('Trends'),
-                ),
-                ElevatedButton.icon(
-                  onPressed: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (_) => const SettingsScreen()));
-                  },
-                  icon: const Icon(Icons.settings),
-                  label: const Text('Settings'),
-                ),
-              ],
+              DropdownButton<String>(
+                value: selectedLevel,
+                items: levels
+                    .map((l) => DropdownMenuItem(value: l, child: Text(l)))
+                    .toList(),
+                onChanged: (v) {
+                  if (v != null) setState(() => selectedLevel = v);
+                },
+              ),
+              DropdownButton<String>(
+                value: selectedEquipment,
+                items: equipmentSet
+                    .map((e) => DropdownMenuItem(value: e, child: Text(e)))
+                    .toList(),
+                onChanged: (v) {
+                  if (v != null) setState(() => selectedEquipment = v);
+                },
+              ),
+              TextButton(
+                onPressed: () => setState(() {
+                  selectedGoal = 'All';
+                  selectedLevel = 'All';
+                  selectedEquipment = 'All';
+                }),
+                child: const Text('Clear'),
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          if (routines.isEmpty)
+            const Text('No routines yet. Tap + to add your first routine.')
+          else
+            Expanded(
+              child: ListView.separated(
+                itemCount: filtered.length,
+                separatorBuilder: (_, __) => const Divider(height: 1),
+                itemBuilder: (context, idx) {
+                  final routine = filtered[idx];
+                  return ListTile(
+                    title: Text(routine.name),
+                    subtitle: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('${routine.exercises.length} exercises'),
+                        Text(
+                            'Goal: ${routine.goal.isNotEmpty ? routine.goal : '—'}  •  Level: ${routine.level.isNotEmpty ? routine.level : '—'}'),
+                        Text(
+                            'Equipment: ${routine.equipmentNeeded.isNotEmpty ? routine.equipmentNeeded.join(', ') : 'None'}'),
+                      ],
+                    ),
+                    onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (_) =>
+                              RoutineDetailScreen(routineId: routine.id)),
+                    ),
+                    trailing: PopupMenuButton<String>(
+                      onSelected: (value) {
+                        if (value == 'rename') {
+                          renameDialog(routine.id, routine.name);
+                        } else if (value == 'delete') {
+                          confirmDelete(idx, routine.name);
+                        }
+                      },
+                      itemBuilder: (_) => const [
+                        PopupMenuItem(value: 'rename', child: Text('Rename')),
+                        PopupMenuItem(value: 'delete', child: Text('Delete')),
+                      ],
+                    ),
+                  );
+                },
+              ),
             ),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(context,
-              MaterialPageRoute(builder: (_) => const NewRoutineScreen()));
-        },
-        tooltip: 'Add Routine',
-        child: const Icon(Icons.add),
+        ],
       ),
     );
   }

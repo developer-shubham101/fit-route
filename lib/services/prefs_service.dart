@@ -5,6 +5,17 @@ class PrefsService {
   static const String keyDefaultUnits =
       'default_units'; // 'metric' or 'imperial'
   static const String keySeededDefaults = 'seeded_default_routines';
+  static const String keySeededSampleData = 'seeded_sample_data';
+
+  Future<bool> getSeededSampleData() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getBool(keySeededSampleData) ?? false;
+  }
+
+  Future<void> setSeededSampleData(bool value) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(keySeededSampleData, value);
+  }
 
   Future<bool> getOnboardingComplete() async {
     final prefs = await SharedPreferences.getInstance();

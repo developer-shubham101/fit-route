@@ -150,3 +150,81 @@ final historySummaryProvider = Provider<HistorySummary>((ref) {
   }
   return HistorySummary(reps, volumeKg);
 });
+
+// ── Dashboard providers ──────────────────────────────────────────────────────
+
+/// All entries for today (local date)
+final todayEntriesProvider = Provider<List<WorkoutEntry>>((ref) {
+  final entries = ref.watch(entriesProvider);
+  final today = _startOfTodayLocal();
+  final tomorrow = today.add(const Duration(days: 1));
+  return entries
+      .where((e) {
+        final t = e.timestamp.toLocal();
+        return !t.isBefore(today) && t.isBefore(tomorrow);
+      })
+      .toList()
+    ..sort((a, b) => b.timestamp.compareTo(a.timestamp));
+});
+
+/// This-week stats: totalReps + totalVolumeKg
+class WeekSummary {
+  final int totalReps;
+  final double totalVolumeKg;
+  final int workoutDays; // distinct days with at least 1 entry
+  const WeekSummary(this.totalReps, this.totalVolumeKg, this.workoutDays);
+}
+
+final weekSummaryProvider = Provider<WeekSummary>((ref) {
+  final entries = ref.watch(entriesProvider);
+  final weekStart = _startOfWeekLocal();
+  final weekEntries =
+      entries.where((e) => !e.timestamp.toLocal().isBefore(weekStart)).toList();
+  int reps = 0;
+  double vol = 0;
+  final days = <DateTime>{};
+  for (final e in weekEntries) {
+    reps += e.reps;
+    if (e.externalWeight != null) vol += e.externalWeight! * e.reps;
+    final t = e.timestamp.toLocal();
+    days.add(DateTime(t.year, t.month, t.day));
+  }
+  return WeekSummary(reps, vol, days.length);
+});
+
+/// Personal records: best (weight × reps) per exercise, stored as best weight
+class PersonalRecord {
+  final String exerciseId;
+  final String exerciseName;
+  final double bestWeightKg;
+  final int repsAtBest;
+  final DateTime achievedAt;
+  const PersonalRecord(
+      this.exerciseId, this.exerciseName, this.bestWeightKg, this.repsAtBest,
+      this.achievedAt);
+}
+
+final personalRecordsProvider = Provider<List<PersonalRecord>>((ref) {
+  final entries = ref.watch(entriesProvider);
+  final Map<String, PersonalRecord> best = {};
+  for (final e in entries) {
+    if (e.externalWeight == null || e.externalWeight! <= 0) continue;
+    final vol = e.externalWeight! * e.reps;
+    final existing = best[e.exerciseId];
+    if (existing == null ||
+        vol > existing.bestWeightKg * existing.repsAtBest) {
+      best[e.exerciseId] = PersonalRecord(
+          e.exerciseId, e.exerciseName, e.externalWeight!, e.reps, e.timestamp);
+    }
+  }
+  final list = best.values.toList()
+    ..sort((a, b) =>
+        (b.bestWeightKg * b.repsAtBest).compareTo(a.bestWeightKg * a.repsAtBest));
+  return list;
+});
+
+/// Most recent workout group (last calendar day that had entries)
+final lastWorkoutGroupProvider = Provider<HistoryGroup?>((ref) {
+  final groups = ref.watch(groupedEntriesProvider);
+  return groups.isNotEmpty ? groups.first : null;
+});
