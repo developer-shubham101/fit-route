@@ -1,0 +1,1709 @@
+[
+  {
+    "id": 1,
+    "name": "Jumping Jacks",
+    "category": "Full Body",
+    "type": "Bodyweight",
+    "difficulty": "Beginner",
+    "locations": [
+      "Home",
+      "Outside"
+    ],
+    "equipment": [
+      "None"
+    ],
+    "instructions": "Step-by-step guide to correctly perform Jumping Jacks.",
+    "common_mistakes": "Avoid improper form when doing Jumping Jacks.",
+    "benefits": "Improves strength and endurance in the Core area.",
+    "safety_tips": "Warm up before starting and use proper posture.",
+    "primary_muscles": [
+      "Core"
+    ],
+    "secondary_muscles": [
+      "Core"
+    ],
+    "sets_recommended": 4,
+    "reps_recommended": 8,
+    "time_recommended": null,
+    "calories_burn_estimate": 12,
+    "progression_level": "Progress to harder variation of Jumping Jacks.",
+    "regression_level": "Try easier version of Jumping Jacks.",
+    "image_url": "https://example.com/images/1.jpg",
+    "gif_url": "https://example.com/gifs/1.gif",
+    "video_url": "https://example.com/videos/1.mp4",
+    "audio_cue": "https://example.com/audio/1.mp3",
+    "tags": [
+      "Cardio",
+      "Flexibility"
+    ],
+    "indoor_outdoor": "Indoor",
+    "is_favorite": false,
+    "is_bodyweight": true,
+    "requires_partner": true,
+    "warmup_or_main": "Cooldown"
+  },
+  {
+    "id": 2,
+    "name": "High Knees",
+    "category": "Shoulders",
+    "type": "Bodyweight",
+    "difficulty": "Beginner",
+    "locations": [
+      "Home",
+      "Outside"
+    ],
+    "equipment": [
+      "None"
+    ],
+    "instructions": "Step-by-step guide to correctly perform High Knees.",
+    "common_mistakes": "Avoid improper form when doing High Knees.",
+    "benefits": "Improves strength and endurance in the Shoulders area.",
+    "safety_tips": "Warm up before starting and use proper posture.",
+    "primary_muscles": [
+      "Chest"
+    ],
+    "secondary_muscles": [
+      "Shoulders"
+    ],
+    "sets_recommended": 5,
+    "reps_recommended": 9,
+    "time_recommended": null,
+    "calories_burn_estimate": 13,
+    "progression_level": "Progress to harder variation of High Knees.",
+    "regression_level": "Try easier version of High Knees.",
+    "image_url": "https://example.com/images/2.jpg",
+    "gif_url": "https://example.com/gifs/2.gif",
+    "video_url": "https://example.com/videos/2.mp4",
+    "audio_cue": "https://example.com/audio/2.mp3",
+    "tags": [
+      "HIIT",
+      "Mobility"
+    ],
+    "indoor_outdoor": "Indoor",
+    "is_favorite": false,
+    "is_bodyweight": true,
+    "requires_partner": true,
+    "warmup_or_main": "Cooldown"
+  },
+  {
+    "id": 3,
+    "name": "Butt Kicks",
+    "category": "Shoulders",
+    "type": "Bodyweight",
+    "difficulty": "Beginner",
+    "locations": [
+      "Home",
+      "Outside"
+    ],
+    "equipment": [
+      "None"
+    ],
+    "instructions": "Step-by-step guide to correctly perform Butt Kicks.",
+    "common_mistakes": "Avoid improper form when doing Butt Kicks.",
+    "benefits": "Improves strength and endurance in the Chest area.",
+    "safety_tips": "Warm up before starting and use proper posture.",
+    "primary_muscles": [
+      "Chest"
+    ],
+    "secondary_muscles": [
+      "Chest"
+    ],
+    "sets_recommended": 3,
+    "reps_recommended": 10,
+    "time_recommended": null,
+    "calories_burn_estimate": 8,
+    "progression_level": "Progress to harder variation of Butt Kicks.",
+    "regression_level": "Try easier version of Butt Kicks.",
+    "image_url": "https://example.com/images/3.jpg",
+    "gif_url": "https://example.com/gifs/3.gif",
+    "video_url": "https://example.com/videos/3.mp4",
+    "audio_cue": "https://example.com/audio/3.mp3",
+    "tags": [
+      "Flexibility",
+      "Strength"
+    ],
+    "indoor_outdoor": "Indoor",
+    "is_favorite": false,
+    "is_bodyweight": true,
+    "requires_partner": false,
+    "warmup_or_main": "Warm-up"
+  },
+  {
+    "id": 4,
+    "name": "Mountain Climbers",
+    "category": "Shoulders",
+    "type": "Bodyweight",
+    "difficulty": "Intermediate",
+    "locations": [
+      "Home",
+      "Outside"
+    ],
+    "equipment": [
+      "None"
+    ],
+    "instructions": "Step-by-step guide to correctly perform Mountain Climbers.",
+    "common_mistakes": "Avoid improper form when doing Mountain Climbers.",
+    "benefits": "Improves strength and endurance in the Arms area.",
+    "safety_tips": "Warm up before starting and use proper posture.",
+    "primary_muscles": [
+      "Back"
+    ],
+    "secondary_muscles": [
+      "Arms"
+    ],
+    "sets_recommended": 4,
+    "reps_recommended": 10,
+    "time_recommended": null,
+    "calories_burn_estimate": 13,
+    "progression_level": "Progress to harder variation of Mountain Climbers.",
+    "regression_level": "Try easier version of Mountain Climbers.",
+    "image_url": "https://example.com/images/4.jpg",
+    "gif_url": "https://example.com/gifs/4.gif",
+    "video_url": "https://example.com/videos/4.mp4",
+    "audio_cue": "https://example.com/audio/4.mp3",
+    "tags": [
+      "Strength",
+      "Mobility"
+    ],
+    "indoor_outdoor": "Indoor",
+    "is_favorite": false,
+    "is_bodyweight": true,
+    "requires_partner": false,
+    "warmup_or_main": "Main Exercise"
+  },
+  {
+    "id": 5,
+    "name": "Burpees",
+    "category": "Chest",
+    "type": "Bodyweight",
+    "difficulty": "Hard",
+    "locations": [
+      "Home",
+      "Outside"
+    ],
+    "equipment": [
+      "None"
+    ],
+    "instructions": "Step-by-step guide to correctly perform Burpees.",
+    "common_mistakes": "Avoid improper form when doing Burpees.",
+    "benefits": "Improves strength and endurance in the Legs area.",
+    "safety_tips": "Warm up before starting and use proper posture.",
+    "primary_muscles": [
+      "Full Body"
+    ],
+    "secondary_muscles": [
+      "Core"
+    ],
+    "sets_recommended": 3,
+    "reps_recommended": 9,
+    "time_recommended": null,
+    "calories_burn_estimate": 8,
+    "progression_level": "Progress to harder variation of Burpees.",
+    "regression_level": "Try easier version of Burpees.",
+    "image_url": "https://example.com/images/5.jpg",
+    "gif_url": "https://example.com/gifs/5.gif",
+    "video_url": "https://example.com/videos/5.mp4",
+    "audio_cue": "https://example.com/audio/5.mp3",
+    "tags": [
+      "Strength",
+      "Mobility"
+    ],
+    "indoor_outdoor": "Indoor",
+    "is_favorite": false,
+    "is_bodyweight": true,
+    "requires_partner": false,
+    "warmup_or_main": "Main Exercise"
+  },
+  {
+    "id": 6,
+    "name": "Push-Ups",
+    "category": "Legs",
+    "type": "Bodyweight",
+    "difficulty": "Beginner",
+    "locations": [
+      "Home",
+      "Outside"
+    ],
+    "equipment": [
+      "None"
+    ],
+    "instructions": "Step-by-step guide to correctly perform Push-Ups.",
+    "common_mistakes": "Avoid improper form when doing Push-Ups.",
+    "benefits": "Improves strength and endurance in the Arms area.",
+    "safety_tips": "Warm up before starting and use proper posture.",
+    "primary_muscles": [
+      "Full Body"
+    ],
+    "secondary_muscles": [
+      "Shoulders"
+    ],
+    "sets_recommended": 2,
+    "reps_recommended": 12,
+    "time_recommended": null,
+    "calories_burn_estimate": 6,
+    "progression_level": "Progress to harder variation of Push-Ups.",
+    "regression_level": "Try easier version of Push-Ups.",
+    "image_url": "https://example.com/images/6.jpg",
+    "gif_url": "https://example.com/gifs/6.gif",
+    "video_url": "https://example.com/videos/6.mp4",
+    "audio_cue": "https://example.com/audio/6.mp3",
+    "tags": [
+      "Strength",
+      "Flexibility"
+    ],
+    "indoor_outdoor": "Indoor",
+    "is_favorite": false,
+    "is_bodyweight": true,
+    "requires_partner": true,
+    "warmup_or_main": "Main Exercise"
+  },
+  {
+    "id": 7,
+    "name": "Incline Push-Ups",
+    "category": "Shoulders",
+    "type": "Bodyweight",
+    "difficulty": "Beginner",
+    "locations": [
+      "Home",
+      "Outside"
+    ],
+    "equipment": [
+      "None"
+    ],
+    "instructions": "Step-by-step guide to correctly perform Incline Push-Ups.",
+    "common_mistakes": "Avoid improper form when doing Incline Push-Ups.",
+    "benefits": "Improves strength and endurance in the Core area.",
+    "safety_tips": "Warm up before starting and use proper posture.",
+    "primary_muscles": [
+      "Core"
+    ],
+    "secondary_muscles": [
+      "Chest"
+    ],
+    "sets_recommended": 5,
+    "reps_recommended": 8,
+    "time_recommended": null,
+    "calories_burn_estimate": 11,
+    "progression_level": "Progress to harder variation of Incline Push-Ups.",
+    "regression_level": "Try easier version of Incline Push-Ups.",
+    "image_url": "https://example.com/images/7.jpg",
+    "gif_url": "https://example.com/gifs/7.gif",
+    "video_url": "https://example.com/videos/7.mp4",
+    "audio_cue": "https://example.com/audio/7.mp3",
+    "tags": [
+      "Mobility",
+      "Flexibility"
+    ],
+    "indoor_outdoor": "Indoor",
+    "is_favorite": false,
+    "is_bodyweight": true,
+    "requires_partner": false,
+    "warmup_or_main": "Warm-up"
+  },
+  {
+    "id": 8,
+    "name": "Decline Push-Ups",
+    "category": "Legs",
+    "type": "Bodyweight",
+    "difficulty": "Intermediate",
+    "locations": [
+      "Home",
+      "Outside"
+    ],
+    "equipment": [
+      "None"
+    ],
+    "instructions": "Step-by-step guide to correctly perform Decline Push-Ups.",
+    "common_mistakes": "Avoid improper form when doing Decline Push-Ups.",
+    "benefits": "Improves strength and endurance in the Core area.",
+    "safety_tips": "Warm up before starting and use proper posture.",
+    "primary_muscles": [
+      "Chest"
+    ],
+    "secondary_muscles": [
+      "Shoulders"
+    ],
+    "sets_recommended": 2,
+    "reps_recommended": 15,
+    "time_recommended": null,
+    "calories_burn_estimate": 8,
+    "progression_level": "Progress to harder variation of Decline Push-Ups.",
+    "regression_level": "Try easier version of Decline Push-Ups.",
+    "image_url": "https://example.com/images/8.jpg",
+    "gif_url": "https://example.com/gifs/8.gif",
+    "video_url": "https://example.com/videos/8.mp4",
+    "audio_cue": "https://example.com/audio/8.mp3",
+    "tags": [
+      "Strength",
+      "HIIT"
+    ],
+    "indoor_outdoor": "Indoor",
+    "is_favorite": false,
+    "is_bodyweight": true,
+    "requires_partner": false,
+    "warmup_or_main": "Cooldown"
+  },
+  {
+    "id": 9,
+    "name": "Diamond Push-Ups",
+    "category": "Arms",
+    "type": "Bodyweight",
+    "difficulty": "Intermediate",
+    "locations": [
+      "Home",
+      "Outside"
+    ],
+    "equipment": [
+      "None"
+    ],
+    "instructions": "Step-by-step guide to correctly perform Diamond Push-Ups.",
+    "common_mistakes": "Avoid improper form when doing Diamond Push-Ups.",
+    "benefits": "Improves strength and endurance in the Chest area.",
+    "safety_tips": "Warm up before starting and use proper posture.",
+    "primary_muscles": [
+      "Core"
+    ],
+    "secondary_muscles": [
+      "Chest"
+    ],
+    "sets_recommended": 4,
+    "reps_recommended": 9,
+    "time_recommended": null,
+    "calories_burn_estimate": 10,
+    "progression_level": "Progress to harder variation of Diamond Push-Ups.",
+    "regression_level": "Try easier version of Diamond Push-Ups.",
+    "image_url": "https://example.com/images/9.jpg",
+    "gif_url": "https://example.com/gifs/9.gif",
+    "video_url": "https://example.com/videos/9.mp4",
+    "audio_cue": "https://example.com/audio/9.mp3",
+    "tags": [
+      "Strength",
+      "Mobility"
+    ],
+    "indoor_outdoor": "Indoor",
+    "is_favorite": false,
+    "is_bodyweight": true,
+    "requires_partner": false,
+    "warmup_or_main": "Warm-up"
+  },
+  {
+    "id": 10,
+    "name": "Pike Push-Ups",
+    "category": "Shoulders",
+    "type": "Bodyweight",
+    "difficulty": "Intermediate",
+    "locations": [
+      "Home",
+      "Outside"
+    ],
+    "equipment": [
+      "None"
+    ],
+    "instructions": "Step-by-step guide to correctly perform Pike Push-Ups.",
+    "common_mistakes": "Avoid improper form when doing Pike Push-Ups.",
+    "benefits": "Improves strength and endurance in the Chest area.",
+    "safety_tips": "Warm up before starting and use proper posture.",
+    "primary_muscles": [
+      "Back"
+    ],
+    "secondary_muscles": [
+      "Chest"
+    ],
+    "sets_recommended": 4,
+    "reps_recommended": 11,
+    "time_recommended": null,
+    "calories_burn_estimate": 8,
+    "progression_level": "Progress to harder variation of Pike Push-Ups.",
+    "regression_level": "Try easier version of Pike Push-Ups.",
+    "image_url": "https://example.com/images/10.jpg",
+    "gif_url": "https://example.com/gifs/10.gif",
+    "video_url": "https://example.com/videos/10.mp4",
+    "audio_cue": "https://example.com/audio/10.mp3",
+    "tags": [
+      "HIIT",
+      "Flexibility"
+    ],
+    "indoor_outdoor": "Indoor",
+    "is_favorite": false,
+    "is_bodyweight": true,
+    "requires_partner": true,
+    "warmup_or_main": "Cooldown"
+  },
+  {
+    "id": 11,
+    "name": "Hindu Push-Ups",
+    "category": "Legs",
+    "type": "Bodyweight",
+    "difficulty": "Hard",
+    "locations": [
+      "Home",
+      "Outside"
+    ],
+    "equipment": [
+      "None"
+    ],
+    "instructions": "Step-by-step guide to correctly perform Hindu Push-Ups.",
+    "common_mistakes": "Avoid improper form when doing Hindu Push-Ups.",
+    "benefits": "Improves strength and endurance in the Arms area.",
+    "safety_tips": "Warm up before starting and use proper posture.",
+    "primary_muscles": [
+      "Shoulders"
+    ],
+    "secondary_muscles": [
+      "Full Body"
+    ],
+    "sets_recommended": 3,
+    "reps_recommended": 12,
+    "time_recommended": null,
+    "calories_burn_estimate": 9,
+    "progression_level": "Progress to harder variation of Hindu Push-Ups.",
+    "regression_level": "Try easier version of Hindu Push-Ups.",
+    "image_url": "https://example.com/images/11.jpg",
+    "gif_url": "https://example.com/gifs/11.gif",
+    "video_url": "https://example.com/videos/11.mp4",
+    "audio_cue": "https://example.com/audio/11.mp3",
+    "tags": [
+      "HIIT",
+      "Strength"
+    ],
+    "indoor_outdoor": "Indoor",
+    "is_favorite": false,
+    "is_bodyweight": true,
+    "requires_partner": true,
+    "warmup_or_main": "Warm-up"
+  },
+  {
+    "id": 12,
+    "name": "Wide Grip Push-Ups",
+    "category": "Back",
+    "type": "Bodyweight",
+    "difficulty": "Beginner",
+    "locations": [
+      "Home",
+      "Outside"
+    ],
+    "equipment": [
+      "None"
+    ],
+    "instructions": "Step-by-step guide to correctly perform Wide Grip Push-Ups.",
+    "common_mistakes": "Avoid improper form when doing Wide Grip Push-Ups.",
+    "benefits": "Improves strength and endurance in the Chest area.",
+    "safety_tips": "Warm up before starting and use proper posture.",
+    "primary_muscles": [
+      "Full Body"
+    ],
+    "secondary_muscles": [
+      "Shoulders"
+    ],
+    "sets_recommended": 3,
+    "reps_recommended": 10,
+    "time_recommended": null,
+    "calories_burn_estimate": 10,
+    "progression_level": "Progress to harder variation of Wide Grip Push-Ups.",
+    "regression_level": "Try easier version of Wide Grip Push-Ups.",
+    "image_url": "https://example.com/images/12.jpg",
+    "gif_url": "https://example.com/gifs/12.gif",
+    "video_url": "https://example.com/videos/12.mp4",
+    "audio_cue": "https://example.com/audio/12.mp3",
+    "tags": [
+      "Flexibility",
+      "Cardio"
+    ],
+    "indoor_outdoor": "Indoor",
+    "is_favorite": false,
+    "is_bodyweight": true,
+    "requires_partner": false,
+    "warmup_or_main": "Main Exercise"
+  },
+  {
+    "id": 13,
+    "name": "Archer Push-Ups",
+    "category": "Back",
+    "type": "Bodyweight",
+    "difficulty": "Hard",
+    "locations": [
+      "Home",
+      "Outside"
+    ],
+    "equipment": [
+      "None"
+    ],
+    "instructions": "Step-by-step guide to correctly perform Archer Push-Ups.",
+    "common_mistakes": "Avoid improper form when doing Archer Push-Ups.",
+    "benefits": "Improves strength and endurance in the Legs area.",
+    "safety_tips": "Warm up before starting and use proper posture.",
+    "primary_muscles": [
+      "Core"
+    ],
+    "secondary_muscles": [
+      "Shoulders"
+    ],
+    "sets_recommended": 2,
+    "reps_recommended": 9,
+    "time_recommended": null,
+    "calories_burn_estimate": 14,
+    "progression_level": "Progress to harder variation of Archer Push-Ups.",
+    "regression_level": "Try easier version of Archer Push-Ups.",
+    "image_url": "https://example.com/images/13.jpg",
+    "gif_url": "https://example.com/gifs/13.gif",
+    "video_url": "https://example.com/videos/13.mp4",
+    "audio_cue": "https://example.com/audio/13.mp3",
+    "tags": [
+      "HIIT",
+      "Strength"
+    ],
+    "indoor_outdoor": "Indoor",
+    "is_favorite": false,
+    "is_bodyweight": true,
+    "requires_partner": true,
+    "warmup_or_main": "Warm-up"
+  },
+  {
+    "id": 14,
+    "name": "Squats",
+    "category": "Core",
+    "type": "Bodyweight",
+    "difficulty": "Beginner",
+    "locations": [
+      "Home",
+      "Outside"
+    ],
+    "equipment": [
+      "None"
+    ],
+    "instructions": "Step-by-step guide to correctly perform Squats.",
+    "common_mistakes": "Avoid improper form when doing Squats.",
+    "benefits": "Improves strength and endurance in the Core area.",
+    "safety_tips": "Warm up before starting and use proper posture.",
+    "primary_muscles": [
+      "Arms"
+    ],
+    "secondary_muscles": [
+      "Legs"
+    ],
+    "sets_recommended": 5,
+    "reps_recommended": 9,
+    "time_recommended": null,
+    "calories_burn_estimate": 8,
+    "progression_level": "Progress to harder variation of Squats.",
+    "regression_level": "Try easier version of Squats.",
+    "image_url": "https://example.com/images/14.jpg",
+    "gif_url": "https://example.com/gifs/14.gif",
+    "video_url": "https://example.com/videos/14.mp4",
+    "audio_cue": "https://example.com/audio/14.mp3",
+    "tags": [
+      "HIIT",
+      "Cardio"
+    ],
+    "indoor_outdoor": "Indoor",
+    "is_favorite": false,
+    "is_bodyweight": true,
+    "requires_partner": true,
+    "warmup_or_main": "Main Exercise"
+  },
+  {
+    "id": 15,
+    "name": "Jump Squats",
+    "category": "Chest",
+    "type": "Bodyweight",
+    "difficulty": "Intermediate",
+    "locations": [
+      "Home",
+      "Outside"
+    ],
+    "equipment": [
+      "None"
+    ],
+    "instructions": "Step-by-step guide to correctly perform Jump Squats.",
+    "common_mistakes": "Avoid improper form when doing Jump Squats.",
+    "benefits": "Improves strength and endurance in the Core area.",
+    "safety_tips": "Warm up before starting and use proper posture.",
+    "primary_muscles": [
+      "Core"
+    ],
+    "secondary_muscles": [
+      "Back"
+    ],
+    "sets_recommended": 4,
+    "reps_recommended": 11,
+    "time_recommended": null,
+    "calories_burn_estimate": 7,
+    "progression_level": "Progress to harder variation of Jump Squats.",
+    "regression_level": "Try easier version of Jump Squats.",
+    "image_url": "https://example.com/images/15.jpg",
+    "gif_url": "https://example.com/gifs/15.gif",
+    "video_url": "https://example.com/videos/15.mp4",
+    "audio_cue": "https://example.com/audio/15.mp3",
+    "tags": [
+      "HIIT",
+      "Flexibility"
+    ],
+    "indoor_outdoor": "Indoor",
+    "is_favorite": false,
+    "is_bodyweight": true,
+    "requires_partner": false,
+    "warmup_or_main": "Main Exercise"
+  },
+  {
+    "id": 16,
+    "name": "Pistol Squats",
+    "category": "Arms",
+    "type": "Bodyweight",
+    "difficulty": "Hard",
+    "locations": [
+      "Home",
+      "Outside"
+    ],
+    "equipment": [
+      "None"
+    ],
+    "instructions": "Step-by-step guide to correctly perform Pistol Squats.",
+    "common_mistakes": "Avoid improper form when doing Pistol Squats.",
+    "benefits": "Improves strength and endurance in the Arms area.",
+    "safety_tips": "Warm up before starting and use proper posture.",
+    "primary_muscles": [
+      "Chest"
+    ],
+    "secondary_muscles": [
+      "Arms"
+    ],
+    "sets_recommended": 4,
+    "reps_recommended": 8,
+    "time_recommended": null,
+    "calories_burn_estimate": 5,
+    "progression_level": "Progress to harder variation of Pistol Squats.",
+    "regression_level": "Try easier version of Pistol Squats.",
+    "image_url": "https://example.com/images/16.jpg",
+    "gif_url": "https://example.com/gifs/16.gif",
+    "video_url": "https://example.com/videos/16.mp4",
+    "audio_cue": "https://example.com/audio/16.mp3",
+    "tags": [
+      "HIIT",
+      "Strength"
+    ],
+    "indoor_outdoor": "Indoor",
+    "is_favorite": false,
+    "is_bodyweight": true,
+    "requires_partner": false,
+    "warmup_or_main": "Main Exercise"
+  },
+  {
+    "id": 17,
+    "name": "Bulgarian Split Squats",
+    "category": "Legs",
+    "type": "Bodyweight",
+    "difficulty": "Intermediate",
+    "locations": [
+      "Home",
+      "Outside"
+    ],
+    "equipment": [
+      "None"
+    ],
+    "instructions": "Step-by-step guide to correctly perform Bulgarian Split Squats.",
+    "common_mistakes": "Avoid improper form when doing Bulgarian Split Squats.",
+    "benefits": "Improves strength and endurance in the Arms area.",
+    "safety_tips": "Warm up before starting and use proper posture.",
+    "primary_muscles": [
+      "Shoulders"
+    ],
+    "secondary_muscles": [
+      "Chest"
+    ],
+    "sets_recommended": 5,
+    "reps_recommended": 8,
+    "time_recommended": null,
+    "calories_burn_estimate": 14,
+    "progression_level": "Progress to harder variation of Bulgarian Split Squats.",
+    "regression_level": "Try easier version of Bulgarian Split Squats.",
+    "image_url": "https://example.com/images/17.jpg",
+    "gif_url": "https://example.com/gifs/17.gif",
+    "video_url": "https://example.com/videos/17.mp4",
+    "audio_cue": "https://example.com/audio/17.mp3",
+    "tags": [
+      "Mobility",
+      "Strength"
+    ],
+    "indoor_outdoor": "Indoor",
+    "is_favorite": false,
+    "is_bodyweight": true,
+    "requires_partner": false,
+    "warmup_or_main": "Main Exercise"
+  },
+  {
+    "id": 18,
+    "name": "Lunges",
+    "category": "Shoulders",
+    "type": "Bodyweight",
+    "difficulty": "Beginner",
+    "locations": [
+      "Home",
+      "Outside"
+    ],
+    "equipment": [
+      "None"
+    ],
+    "instructions": "Step-by-step guide to correctly perform Lunges.",
+    "common_mistakes": "Avoid improper form when doing Lunges.",
+    "benefits": "Improves strength and endurance in the Back area.",
+    "safety_tips": "Warm up before starting and use proper posture.",
+    "primary_muscles": [
+      "Core"
+    ],
+    "secondary_muscles": [
+      "Full Body"
+    ],
+    "sets_recommended": 4,
+    "reps_recommended": 15,
+    "time_recommended": null,
+    "calories_burn_estimate": 12,
+    "progression_level": "Progress to harder variation of Lunges.",
+    "regression_level": "Try easier version of Lunges.",
+    "image_url": "https://example.com/images/18.jpg",
+    "gif_url": "https://example.com/gifs/18.gif",
+    "video_url": "https://example.com/videos/18.mp4",
+    "audio_cue": "https://example.com/audio/18.mp3",
+    "tags": [
+      "Cardio",
+      "Mobility"
+    ],
+    "indoor_outdoor": "Indoor",
+    "is_favorite": false,
+    "is_bodyweight": true,
+    "requires_partner": false,
+    "warmup_or_main": "Cooldown"
+  },
+  {
+    "id": 19,
+    "name": "Walking Lunges",
+    "category": "Legs",
+    "type": "Bodyweight",
+    "difficulty": "Intermediate",
+    "locations": [
+      "Outside"
+    ],
+    "equipment": [
+      "None"
+    ],
+    "instructions": "Step-by-step guide to correctly perform Walking Lunges.",
+    "common_mistakes": "Avoid improper form when doing Walking Lunges.",
+    "benefits": "Improves strength and endurance in the Back area.",
+    "safety_tips": "Warm up before starting and use proper posture.",
+    "primary_muscles": [
+      "Full Body"
+    ],
+    "secondary_muscles": [
+      "Shoulders"
+    ],
+    "sets_recommended": 5,
+    "reps_recommended": 10,
+    "time_recommended": null,
+    "calories_burn_estimate": 5,
+    "progression_level": "Progress to harder variation of Walking Lunges.",
+    "regression_level": "Try easier version of Walking Lunges.",
+    "image_url": "https://example.com/images/19.jpg",
+    "gif_url": "https://example.com/gifs/19.gif",
+    "video_url": "https://example.com/videos/19.mp4",
+    "audio_cue": "https://example.com/audio/19.mp3",
+    "tags": [
+      "Strength",
+      "Flexibility"
+    ],
+    "indoor_outdoor": "Outdoor",
+    "is_favorite": false,
+    "is_bodyweight": true,
+    "requires_partner": false,
+    "warmup_or_main": "Main Exercise"
+  },
+  {
+    "id": 20,
+    "name": "Side Lunges",
+    "category": "Full Body",
+    "type": "Bodyweight",
+    "difficulty": "Intermediate",
+    "locations": [
+      "Home",
+      "Outside"
+    ],
+    "equipment": [
+      "None"
+    ],
+    "instructions": "Step-by-step guide to correctly perform Side Lunges.",
+    "common_mistakes": "Avoid improper form when doing Side Lunges.",
+    "benefits": "Improves strength and endurance in the Core area.",
+    "safety_tips": "Warm up before starting and use proper posture.",
+    "primary_muscles": [
+      "Core"
+    ],
+    "secondary_muscles": [
+      "Legs"
+    ],
+    "sets_recommended": 4,
+    "reps_recommended": 15,
+    "time_recommended": null,
+    "calories_burn_estimate": 8,
+    "progression_level": "Progress to harder variation of Side Lunges.",
+    "regression_level": "Try easier version of Side Lunges.",
+    "image_url": "https://example.com/images/20.jpg",
+    "gif_url": "https://example.com/gifs/20.gif",
+    "video_url": "https://example.com/videos/20.mp4",
+    "audio_cue": "https://example.com/audio/20.mp3",
+    "tags": [
+      "Strength",
+      "Cardio"
+    ],
+    "indoor_outdoor": "Indoor",
+    "is_favorite": false,
+    "is_bodyweight": true,
+    "requires_partner": false,
+    "warmup_or_main": "Cooldown"
+  },
+  {
+    "id": 21,
+    "name": "Curtsy Lunges",
+    "category": "Legs",
+    "type": "Bodyweight",
+    "difficulty": "Intermediate",
+    "locations": [
+      "Home",
+      "Outside"
+    ],
+    "equipment": [
+      "None"
+    ],
+    "instructions": "Step-by-step guide to correctly perform Curtsy Lunges.",
+    "common_mistakes": "Avoid improper form when doing Curtsy Lunges.",
+    "benefits": "Improves strength and endurance in the Chest area.",
+    "safety_tips": "Warm up before starting and use proper posture.",
+    "primary_muscles": [
+      "Shoulders"
+    ],
+    "secondary_muscles": [
+      "Back"
+    ],
+    "sets_recommended": 4,
+    "reps_recommended": 12,
+    "time_recommended": null,
+    "calories_burn_estimate": 11,
+    "progression_level": "Progress to harder variation of Curtsy Lunges.",
+    "regression_level": "Try easier version of Curtsy Lunges.",
+    "image_url": "https://example.com/images/21.jpg",
+    "gif_url": "https://example.com/gifs/21.gif",
+    "video_url": "https://example.com/videos/21.mp4",
+    "audio_cue": "https://example.com/audio/21.mp3",
+    "tags": [
+      "Cardio",
+      "Mobility"
+    ],
+    "indoor_outdoor": "Indoor",
+    "is_favorite": false,
+    "is_bodyweight": true,
+    "requires_partner": true,
+    "warmup_or_main": "Warm-up"
+  },
+  {
+    "id": 22,
+    "name": "Wall Sit",
+    "category": "Back",
+    "type": "Bodyweight",
+    "difficulty": "Beginner",
+    "locations": [
+      "Home",
+      "Outside"
+    ],
+    "equipment": [
+      "None"
+    ],
+    "instructions": "Step-by-step guide to correctly perform Wall Sit.",
+    "common_mistakes": "Avoid improper form when doing Wall Sit.",
+    "benefits": "Improves strength and endurance in the Back area.",
+    "safety_tips": "Warm up before starting and use proper posture.",
+    "primary_muscles": [
+      "Back"
+    ],
+    "secondary_muscles": [
+      "Back"
+    ],
+    "sets_recommended": 3,
+    "reps_recommended": 10,
+    "time_recommended": null,
+    "calories_burn_estimate": 10,
+    "progression_level": "Progress to harder variation of Wall Sit.",
+    "regression_level": "Try easier version of Wall Sit.",
+    "image_url": "https://example.com/images/22.jpg",
+    "gif_url": "https://example.com/gifs/22.gif",
+    "video_url": "https://example.com/videos/22.mp4",
+    "audio_cue": "https://example.com/audio/22.mp3",
+    "tags": [
+      "Cardio",
+      "Strength"
+    ],
+    "indoor_outdoor": "Indoor",
+    "is_favorite": false,
+    "is_bodyweight": true,
+    "requires_partner": false,
+    "warmup_or_main": "Warm-up"
+  },
+  {
+    "id": 23,
+    "name": "Glute Bridges",
+    "category": "Core",
+    "type": "Bodyweight",
+    "difficulty": "Beginner",
+    "locations": [
+      "Home"
+    ],
+    "equipment": [
+      "None"
+    ],
+    "instructions": "Step-by-step guide to correctly perform Glute Bridges.",
+    "common_mistakes": "Avoid improper form when doing Glute Bridges.",
+    "benefits": "Improves strength and endurance in the Back area.",
+    "safety_tips": "Warm up before starting and use proper posture.",
+    "primary_muscles": [
+      "Core"
+    ],
+    "secondary_muscles": [
+      "Arms"
+    ],
+    "sets_recommended": 4,
+    "reps_recommended": 10,
+    "time_recommended": null,
+    "calories_burn_estimate": 10,
+    "progression_level": "Progress to harder variation of Glute Bridges.",
+    "regression_level": "Try easier version of Glute Bridges.",
+    "image_url": "https://example.com/images/23.jpg",
+    "gif_url": "https://example.com/gifs/23.gif",
+    "video_url": "https://example.com/videos/23.mp4",
+    "audio_cue": "https://example.com/audio/23.mp3",
+    "tags": [
+      "Strength",
+      "Mobility"
+    ],
+    "indoor_outdoor": "Indoor",
+    "is_favorite": false,
+    "is_bodyweight": true,
+    "requires_partner": true,
+    "warmup_or_main": "Warm-up"
+  },
+  {
+    "id": 24,
+    "name": "Hip Thrusts",
+    "category": "Arms",
+    "type": "Bodyweight",
+    "difficulty": "Intermediate",
+    "locations": [
+      "Home"
+    ],
+    "equipment": [
+      "None"
+    ],
+    "instructions": "Step-by-step guide to correctly perform Hip Thrusts.",
+    "common_mistakes": "Avoid improper form when doing Hip Thrusts.",
+    "benefits": "Improves strength and endurance in the Legs area.",
+    "safety_tips": "Warm up before starting and use proper posture.",
+    "primary_muscles": [
+      "Back"
+    ],
+    "secondary_muscles": [
+      "Core"
+    ],
+    "sets_recommended": 5,
+    "reps_recommended": 9,
+    "time_recommended": null,
+    "calories_burn_estimate": 5,
+    "progression_level": "Progress to harder variation of Hip Thrusts.",
+    "regression_level": "Try easier version of Hip Thrusts.",
+    "image_url": "https://example.com/images/24.jpg",
+    "gif_url": "https://example.com/gifs/24.gif",
+    "video_url": "https://example.com/videos/24.mp4",
+    "audio_cue": "https://example.com/audio/24.mp3",
+    "tags": [
+      "HIIT",
+      "Flexibility"
+    ],
+    "indoor_outdoor": "Indoor",
+    "is_favorite": false,
+    "is_bodyweight": true,
+    "requires_partner": false,
+    "warmup_or_main": "Cooldown"
+  },
+  {
+    "id": 25,
+    "name": "Calf Raises",
+    "category": "Full Body",
+    "type": "Bodyweight",
+    "difficulty": "Beginner",
+    "locations": [
+      "Home",
+      "Outside"
+    ],
+    "equipment": [
+      "None"
+    ],
+    "instructions": "Step-by-step guide to correctly perform Calf Raises.",
+    "common_mistakes": "Avoid improper form when doing Calf Raises.",
+    "benefits": "Improves strength and endurance in the Back area.",
+    "safety_tips": "Warm up before starting and use proper posture.",
+    "primary_muscles": [
+      "Full Body"
+    ],
+    "secondary_muscles": [
+      "Back"
+    ],
+    "sets_recommended": 3,
+    "reps_recommended": 13,
+    "time_recommended": null,
+    "calories_burn_estimate": 10,
+    "progression_level": "Progress to harder variation of Calf Raises.",
+    "regression_level": "Try easier version of Calf Raises.",
+    "image_url": "https://example.com/images/25.jpg",
+    "gif_url": "https://example.com/gifs/25.gif",
+    "video_url": "https://example.com/videos/25.mp4",
+    "audio_cue": "https://example.com/audio/25.mp3",
+    "tags": [
+      "Strength",
+      "Cardio"
+    ],
+    "indoor_outdoor": "Indoor",
+    "is_favorite": false,
+    "is_bodyweight": true,
+    "requires_partner": false,
+    "warmup_or_main": "Main Exercise"
+  },
+  {
+    "id": 26,
+    "name": "Donkey Kicks",
+    "category": "Shoulders",
+    "type": "Bodyweight",
+    "difficulty": "Beginner",
+    "locations": [
+      "Home"
+    ],
+    "equipment": [
+      "None"
+    ],
+    "instructions": "Step-by-step guide to correctly perform Donkey Kicks.",
+    "common_mistakes": "Avoid improper form when doing Donkey Kicks.",
+    "benefits": "Improves strength and endurance in the Chest area.",
+    "safety_tips": "Warm up before starting and use proper posture.",
+    "primary_muscles": [
+      "Legs"
+    ],
+    "secondary_muscles": [
+      "Full Body"
+    ],
+    "sets_recommended": 2,
+    "reps_recommended": 14,
+    "time_recommended": null,
+    "calories_burn_estimate": 8,
+    "progression_level": "Progress to harder variation of Donkey Kicks.",
+    "regression_level": "Try easier version of Donkey Kicks.",
+    "image_url": "https://example.com/images/26.jpg",
+    "gif_url": "https://example.com/gifs/26.gif",
+    "video_url": "https://example.com/videos/26.mp4",
+    "audio_cue": "https://example.com/audio/26.mp3",
+    "tags": [
+      "Strength",
+      "Flexibility"
+    ],
+    "indoor_outdoor": "Indoor",
+    "is_favorite": false,
+    "is_bodyweight": true,
+    "requires_partner": false,
+    "warmup_or_main": "Main Exercise"
+  },
+  {
+    "id": 27,
+    "name": "Fire Hydrants",
+    "category": "Back",
+    "type": "Bodyweight",
+    "difficulty": "Beginner",
+    "locations": [
+      "Home"
+    ],
+    "equipment": [
+      "None"
+    ],
+    "instructions": "Step-by-step guide to correctly perform Fire Hydrants.",
+    "common_mistakes": "Avoid improper form when doing Fire Hydrants.",
+    "benefits": "Improves strength and endurance in the Chest area.",
+    "safety_tips": "Warm up before starting and use proper posture.",
+    "primary_muscles": [
+      "Shoulders"
+    ],
+    "secondary_muscles": [
+      "Core"
+    ],
+    "sets_recommended": 4,
+    "reps_recommended": 12,
+    "time_recommended": null,
+    "calories_burn_estimate": 10,
+    "progression_level": "Progress to harder variation of Fire Hydrants.",
+    "regression_level": "Try easier version of Fire Hydrants.",
+    "image_url": "https://example.com/images/27.jpg",
+    "gif_url": "https://example.com/gifs/27.gif",
+    "video_url": "https://example.com/videos/27.mp4",
+    "audio_cue": "https://example.com/audio/27.mp3",
+    "tags": [
+      "Cardio",
+      "Mobility"
+    ],
+    "indoor_outdoor": "Indoor",
+    "is_favorite": false,
+    "is_bodyweight": true,
+    "requires_partner": false,
+    "warmup_or_main": "Main Exercise"
+  },
+  {
+    "id": 28,
+    "name": "Plank",
+    "category": "Back",
+    "type": "Bodyweight",
+    "difficulty": "Beginner",
+    "locations": [
+      "Home",
+      "Outside"
+    ],
+    "equipment": [
+      "None"
+    ],
+    "instructions": "Step-by-step guide to correctly perform Plank.",
+    "common_mistakes": "Avoid improper form when doing Plank.",
+    "benefits": "Improves strength and endurance in the Chest area.",
+    "safety_tips": "Warm up before starting and use proper posture.",
+    "primary_muscles": [
+      "Core"
+    ],
+    "secondary_muscles": [
+      "Chest"
+    ],
+    "sets_recommended": 2,
+    "reps_recommended": 15,
+    "time_recommended": "58 seconds",
+    "calories_burn_estimate": 5,
+    "progression_level": "Progress to harder variation of Plank.",
+    "regression_level": "Try easier version of Plank.",
+    "image_url": "https://example.com/images/28.jpg",
+    "gif_url": "https://example.com/gifs/28.gif",
+    "video_url": "https://example.com/videos/28.mp4",
+    "audio_cue": "https://example.com/audio/28.mp3",
+    "tags": [
+      "Flexibility",
+      "Strength"
+    ],
+    "indoor_outdoor": "Indoor",
+    "is_favorite": false,
+    "is_bodyweight": true,
+    "requires_partner": true,
+    "warmup_or_main": "Warm-up"
+  },
+  {
+    "id": 29,
+    "name": "Side Plank",
+    "category": "Core",
+    "type": "Bodyweight",
+    "difficulty": "Intermediate",
+    "locations": [
+      "Home",
+      "Outside"
+    ],
+    "equipment": [
+      "None"
+    ],
+    "instructions": "Step-by-step guide to correctly perform Side Plank.",
+    "common_mistakes": "Avoid improper form when doing Side Plank.",
+    "benefits": "Improves strength and endurance in the Chest area.",
+    "safety_tips": "Warm up before starting and use proper posture.",
+    "primary_muscles": [
+      "Back"
+    ],
+    "secondary_muscles": [
+      "Chest"
+    ],
+    "sets_recommended": 5,
+    "reps_recommended": 11,
+    "time_recommended": "39 seconds",
+    "calories_burn_estimate": 8,
+    "progression_level": "Progress to harder variation of Side Plank.",
+    "regression_level": "Try easier version of Side Plank.",
+    "image_url": "https://example.com/images/29.jpg",
+    "gif_url": "https://example.com/gifs/29.gif",
+    "video_url": "https://example.com/videos/29.mp4",
+    "audio_cue": "https://example.com/audio/29.mp3",
+    "tags": [
+      "Strength",
+      "Cardio"
+    ],
+    "indoor_outdoor": "Indoor",
+    "is_favorite": false,
+    "is_bodyweight": true,
+    "requires_partner": true,
+    "warmup_or_main": "Main Exercise"
+  },
+  {
+    "id": 30,
+    "name": "Plank to Push-Up",
+    "category": "Legs",
+    "type": "Bodyweight",
+    "difficulty": "Intermediate",
+    "locations": [
+      "Home",
+      "Outside"
+    ],
+    "equipment": [
+      "None"
+    ],
+    "instructions": "Step-by-step guide to correctly perform Plank to Push-Up.",
+    "common_mistakes": "Avoid improper form when doing Plank to Push-Up.",
+    "benefits": "Improves strength and endurance in the Back area.",
+    "safety_tips": "Warm up before starting and use proper posture.",
+    "primary_muscles": [
+      "Arms"
+    ],
+    "secondary_muscles": [
+      "Chest"
+    ],
+    "sets_recommended": 4,
+    "reps_recommended": 9,
+    "time_recommended": "53 seconds",
+    "calories_burn_estimate": 15,
+    "progression_level": "Progress to harder variation of Plank to Push-Up.",
+    "regression_level": "Try easier version of Plank to Push-Up.",
+    "image_url": "https://example.com/images/30.jpg",
+    "gif_url": "https://example.com/gifs/30.gif",
+    "video_url": "https://example.com/videos/30.mp4",
+    "audio_cue": "https://example.com/audio/30.mp3",
+    "tags": [
+      "Strength",
+      "Flexibility"
+    ],
+    "indoor_outdoor": "Indoor",
+    "is_favorite": false,
+    "is_bodyweight": true,
+    "requires_partner": false,
+    "warmup_or_main": "Warm-up"
+  },
+  {
+    "id": 31,
+    "name": "Plank Jacks",
+    "category": "Core",
+    "type": "Bodyweight",
+    "difficulty": "Intermediate",
+    "locations": [
+      "Home",
+      "Outside"
+    ],
+    "equipment": [
+      "None"
+    ],
+    "instructions": "Step-by-step guide to correctly perform Plank Jacks.",
+    "common_mistakes": "Avoid improper form when doing Plank Jacks.",
+    "benefits": "Improves strength and endurance in the Legs area.",
+    "safety_tips": "Warm up before starting and use proper posture.",
+    "primary_muscles": [
+      "Shoulders"
+    ],
+    "secondary_muscles": [
+      "Full Body"
+    ],
+    "sets_recommended": 3,
+    "reps_recommended": 10,
+    "time_recommended": "48 seconds",
+    "calories_burn_estimate": 13,
+    "progression_level": "Progress to harder variation of Plank Jacks.",
+    "regression_level": "Try easier version of Plank Jacks.",
+    "image_url": "https://example.com/images/31.jpg",
+    "gif_url": "https://example.com/gifs/31.gif",
+    "video_url": "https://example.com/videos/31.mp4",
+    "audio_cue": "https://example.com/audio/31.mp3",
+    "tags": [
+      "Flexibility",
+      "Strength"
+    ],
+    "indoor_outdoor": "Indoor",
+    "is_favorite": false,
+    "is_bodyweight": true,
+    "requires_partner": true,
+    "warmup_or_main": "Warm-up"
+  },
+  {
+    "id": 32,
+    "name": "Plank with Shoulder Taps",
+    "category": "Chest",
+    "type": "Bodyweight",
+    "difficulty": "Beginner",
+    "locations": [
+      "Home",
+      "Outside"
+    ],
+    "equipment": [
+      "None"
+    ],
+    "instructions": "Step-by-step guide to correctly perform Plank with Shoulder Taps.",
+    "common_mistakes": "Avoid improper form when doing Plank with Shoulder Taps.",
+    "benefits": "Improves strength and endurance in the Full Body area.",
+    "safety_tips": "Warm up before starting and use proper posture.",
+    "primary_muscles": [
+      "Core"
+    ],
+    "secondary_muscles": [
+      "Arms"
+    ],
+    "sets_recommended": 5,
+    "reps_recommended": 9,
+    "time_recommended": "32 seconds",
+    "calories_burn_estimate": 12,
+    "progression_level": "Progress to harder variation of Plank with Shoulder Taps.",
+    "regression_level": "Try easier version of Plank with Shoulder Taps.",
+    "image_url": "https://example.com/images/32.jpg",
+    "gif_url": "https://example.com/gifs/32.gif",
+    "video_url": "https://example.com/videos/32.mp4",
+    "audio_cue": "https://example.com/audio/32.mp3",
+    "tags": [
+      "HIIT",
+      "Flexibility"
+    ],
+    "indoor_outdoor": "Indoor",
+    "is_favorite": false,
+    "is_bodyweight": true,
+    "requires_partner": true,
+    "warmup_or_main": "Main Exercise"
+  },
+  {
+    "id": 33,
+    "name": "Hollow Hold",
+    "category": "Core",
+    "type": "Bodyweight",
+    "difficulty": "Intermediate",
+    "locations": [
+      "Home"
+    ],
+    "equipment": [
+      "None"
+    ],
+    "instructions": "Step-by-step guide to correctly perform Hollow Hold.",
+    "common_mistakes": "Avoid improper form when doing Hollow Hold.",
+    "benefits": "Improves strength and endurance in the Back area.",
+    "safety_tips": "Warm up before starting and use proper posture.",
+    "primary_muscles": [
+      "Legs"
+    ],
+    "secondary_muscles": [
+      "Chest"
+    ],
+    "sets_recommended": 5,
+    "reps_recommended": 13,
+    "time_recommended": null,
+    "calories_burn_estimate": 6,
+    "progression_level": "Progress to harder variation of Hollow Hold.",
+    "regression_level": "Try easier version of Hollow Hold.",
+    "image_url": "https://example.com/images/33.jpg",
+    "gif_url": "https://example.com/gifs/33.gif",
+    "video_url": "https://example.com/videos/33.mp4",
+    "audio_cue": "https://example.com/audio/33.mp3",
+    "tags": [
+      "Mobility",
+      "Cardio"
+    ],
+    "indoor_outdoor": "Indoor",
+    "is_favorite": false,
+    "is_bodyweight": true,
+    "requires_partner": true,
+    "warmup_or_main": "Warm-up"
+  },
+  {
+    "id": 34,
+    "name": "Superman Hold",
+    "category": "Arms",
+    "type": "Bodyweight",
+    "difficulty": "Beginner",
+    "locations": [
+      "Home"
+    ],
+    "equipment": [
+      "None"
+    ],
+    "instructions": "Step-by-step guide to correctly perform Superman Hold.",
+    "common_mistakes": "Avoid improper form when doing Superman Hold.",
+    "benefits": "Improves strength and endurance in the Full Body area.",
+    "safety_tips": "Warm up before starting and use proper posture.",
+    "primary_muscles": [
+      "Core"
+    ],
+    "secondary_muscles": [
+      "Shoulders"
+    ],
+    "sets_recommended": 2,
+    "reps_recommended": 12,
+    "time_recommended": null,
+    "calories_burn_estimate": 11,
+    "progression_level": "Progress to harder variation of Superman Hold.",
+    "regression_level": "Try easier version of Superman Hold.",
+    "image_url": "https://example.com/images/34.jpg",
+    "gif_url": "https://example.com/gifs/34.gif",
+    "video_url": "https://example.com/videos/34.mp4",
+    "audio_cue": "https://example.com/audio/34.mp3",
+    "tags": [
+      "Mobility",
+      "Strength"
+    ],
+    "indoor_outdoor": "Indoor",
+    "is_favorite": false,
+    "is_bodyweight": true,
+    "requires_partner": true,
+    "warmup_or_main": "Main Exercise"
+  },
+  {
+    "id": 35,
+    "name": "Crunches",
+    "category": "Full Body",
+    "type": "Bodyweight",
+    "difficulty": "Beginner",
+    "locations": [
+      "Home"
+    ],
+    "equipment": [
+      "None"
+    ],
+    "instructions": "Step-by-step guide to correctly perform Crunches.",
+    "common_mistakes": "Avoid improper form when doing Crunches.",
+    "benefits": "Improves strength and endurance in the Arms area.",
+    "safety_tips": "Warm up before starting and use proper posture.",
+    "primary_muscles": [
+      "Full Body"
+    ],
+    "secondary_muscles": [
+      "Core"
+    ],
+    "sets_recommended": 3,
+    "reps_recommended": 10,
+    "time_recommended": null,
+    "calories_burn_estimate": 13,
+    "progression_level": "Progress to harder variation of Crunches.",
+    "regression_level": "Try easier version of Crunches.",
+    "image_url": "https://example.com/images/35.jpg",
+    "gif_url": "https://example.com/gifs/35.gif",
+    "video_url": "https://example.com/videos/35.mp4",
+    "audio_cue": "https://example.com/audio/35.mp3",
+    "tags": [
+      "Cardio",
+      "Mobility"
+    ],
+    "indoor_outdoor": "Indoor",
+    "is_favorite": false,
+    "is_bodyweight": true,
+    "requires_partner": false,
+    "warmup_or_main": "Main Exercise"
+  },
+  {
+    "id": 36,
+    "name": "Reverse Crunches",
+    "category": "Full Body",
+    "type": "Bodyweight",
+    "difficulty": "Intermediate",
+    "locations": [
+      "Home"
+    ],
+    "equipment": [
+      "None"
+    ],
+    "instructions": "Step-by-step guide to correctly perform Reverse Crunches.",
+    "common_mistakes": "Avoid improper form when doing Reverse Crunches.",
+    "benefits": "Improves strength and endurance in the Core area.",
+    "safety_tips": "Warm up before starting and use proper posture.",
+    "primary_muscles": [
+      "Core"
+    ],
+    "secondary_muscles": [
+      "Arms"
+    ],
+    "sets_recommended": 5,
+    "reps_recommended": 8,
+    "time_recommended": null,
+    "calories_burn_estimate": 14,
+    "progression_level": "Progress to harder variation of Reverse Crunches.",
+    "regression_level": "Try easier version of Reverse Crunches.",
+    "image_url": "https://example.com/images/36.jpg",
+    "gif_url": "https://example.com/gifs/36.gif",
+    "video_url": "https://example.com/videos/36.mp4",
+    "audio_cue": "https://example.com/audio/36.mp3",
+    "tags": [
+      "Cardio",
+      "Mobility"
+    ],
+    "indoor_outdoor": "Indoor",
+    "is_favorite": false,
+    "is_bodyweight": true,
+    "requires_partner": false,
+    "warmup_or_main": "Cooldown"
+  },
+  {
+    "id": 37,
+    "name": "Bicycle Crunches",
+    "category": "Shoulders",
+    "type": "Bodyweight",
+    "difficulty": "Intermediate",
+    "locations": [
+      "Home"
+    ],
+    "equipment": [
+      "None"
+    ],
+    "instructions": "Step-by-step guide to correctly perform Bicycle Crunches.",
+    "common_mistakes": "Avoid improper form when doing Bicycle Crunches.",
+    "benefits": "Improves strength and endurance in the Core area.",
+    "safety_tips": "Warm up before starting and use proper posture.",
+    "primary_muscles": [
+      "Full Body"
+    ],
+    "secondary_muscles": [
+      "Chest"
+    ],
+    "sets_recommended": 2,
+    "reps_recommended": 14,
+    "time_recommended": null,
+    "calories_burn_estimate": 11,
+    "progression_level": "Progress to harder variation of Bicycle Crunches.",
+    "regression_level": "Try easier version of Bicycle Crunches.",
+    "image_url": "https://example.com/images/37.jpg",
+    "gif_url": "https://example.com/gifs/37.gif",
+    "video_url": "https://example.com/videos/37.mp4",
+    "audio_cue": "https://example.com/audio/37.mp3",
+    "tags": [
+      "Strength",
+      "Flexibility"
+    ],
+    "indoor_outdoor": "Indoor",
+    "is_favorite": false,
+    "is_bodyweight": true,
+    "requires_partner": false,
+    "warmup_or_main": "Cooldown"
+  },
+  {
+    "id": 38,
+    "name": "Flutter Kicks",
+    "category": "Arms",
+    "type": "Bodyweight",
+    "difficulty": "Intermediate",
+    "locations": [
+      "Home"
+    ],
+    "equipment": [
+      "None"
+    ],
+    "instructions": "Step-by-step guide to correctly perform Flutter Kicks.",
+    "common_mistakes": "Avoid improper form when doing Flutter Kicks.",
+    "benefits": "Improves strength and endurance in the Arms area.",
+    "safety_tips": "Warm up before starting and use proper posture.",
+    "primary_muscles": [
+      "Back"
+    ],
+    "secondary_muscles": [
+      "Arms"
+    ],
+    "sets_recommended": 3,
+    "reps_recommended": 9,
+    "time_recommended": null,
+    "calories_burn_estimate": 15,
+    "progression_level": "Progress to harder variation of Flutter Kicks.",
+    "regression_level": "Try easier version of Flutter Kicks.",
+    "image_url": "https://example.com/images/38.jpg",
+    "gif_url": "https://example.com/gifs/38.gif",
+    "video_url": "https://example.com/videos/38.mp4",
+    "audio_cue": "https://example.com/audio/38.mp3",
+    "tags": [
+      "HIIT",
+      "Flexibility"
+    ],
+    "indoor_outdoor": "Indoor",
+    "is_favorite": false,
+    "is_bodyweight": true,
+    "requires_partner": true,
+    "warmup_or_main": "Main Exercise"
+  },
+  {
+    "id": 39,
+    "name": "Leg Raises",
+    "category": "Shoulders",
+    "type": "Bodyweight",
+    "difficulty": "Intermediate",
+    "locations": [
+      "Home"
+    ],
+    "equipment": [
+      "None"
+    ],
+    "instructions": "Step-by-step guide to correctly perform Leg Raises.",
+    "common_mistakes": "Avoid improper form when doing Leg Raises.",
+    "benefits": "Improves strength and endurance in the Back area.",
+    "safety_tips": "Warm up before starting and use proper posture.",
+    "primary_muscles": [
+      "Legs"
+    ],
+    "secondary_muscles": [
+      "Back"
+    ],
+    "sets_recommended": 5,
+    "reps_recommended": 10,
+    "time_recommended": null,
+    "calories_burn_estimate": 10,
+    "progression_level": "Progress to harder variation of Leg Raises.",
+    "regression_level": "Try easier version of Leg Raises.",
+    "image_url": "https://example.com/images/39.jpg",
+    "gif_url": "https://example.com/gifs/39.gif",
+    "video_url": "https://example.com/videos/39.mp4",
+    "audio_cue": "https://example.com/audio/39.mp3",
+    "tags": [
+      "HIIT",
+      "Mobility"
+    ],
+    "indoor_outdoor": "Indoor",
+    "is_favorite": false,
+    "is_bodyweight": true,
+    "requires_partner": true,
+    "warmup_or_main": "Cooldown"
+  },
+  {
+    "id": 40,
+    "name": "V-Ups",
+    "category": "Legs",
+    "type": "Bodyweight",
+    "difficulty": "Hard",
+    "locations": [
+      "Home"
+    ],
+    "equipment": [
+      "None"
+    ],
+    "instructions": "Step-by-step guide to correctly perform V-Ups.",
+    "common_mistakes": "Avoid improper form when doing V-Ups.",
+    "benefits": "Improves strength and endurance in the Legs area.",
+    "safety_tips": "Warm up before starting and use proper posture.",
+    "primary_muscles": [
+      "Legs"
+    ],
+    "secondary_muscles": [
+      "Core"
+    ],
+    "sets_recommended": 3,
+    "reps_recommended": 15,
+    "time_recommended": null,
+    "calories_burn_estimate": 11,
+    "progression_level": "Progress to harder variation of V-Ups.",
+    "regression_level": "Try easier version of V-Ups.",
+    "image_url": "https://example.com/images/40.jpg",
+    "gif_url": "https://example.com/gifs/40.gif",
+    "video_url": "https://example.com/videos/40.mp4",
+    "audio_cue": "https://example.com/audio/40.mp3",
+    "tags": [
+      "Strength",
+      "HIIT"
+    ],
+    "indoor_outdoor": "Indoor",
+    "is_favorite": false,
+    "is_bodyweight": true,
+    "requires_partner": true,
+    "warmup_or_main": "Cooldown"
+  }
+]
