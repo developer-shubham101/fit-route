@@ -19,20 +19,30 @@ class ProgramEditorScreen extends ConsumerStatefulWidget {
 class _ProgramEditorScreenState extends ConsumerState<ProgramEditorScreen> {
   final _nameCtrl = TextEditingController();
   final _descCtrl = TextEditingController();
+  final _durationCtrl = TextEditingController();
+  final _equipmentCtrl = TextEditingController();
+  final _locationCtrl = TextEditingController();
+  final _tagsCtrl = TextEditingController();
   String _type = 'Custom';
+  String _goal = '';
+  String _level = '';
   late List<_DayEdit> _days;
   String _units = 'metric';
 
   static const _types = [
-    'Full Body',
-    'Push Pull Legs',
-    'Chest',
-    'Back',
-    'Legs',
-    'Shoulder',
-    'Arms',
-    'Custom',
+    'Full Body', 'Push Pull Legs', 'Chest', 'Back',
+    'Legs', 'Shoulder', 'Arms', 'Custom',
   ];
+  static const _goals = [
+    '', 'Weight Loss', 'Muscle Gain', 'Endurance', 'Flexibility', 'Maintenance',
+  ];
+  static const _levels = ['', 'Beginner', 'Intermediate', 'Advanced'];
+
+  List<String> _splitList(String s) => s
+      .split(RegExp(r'[,\n]'))
+      .map((e) => e.trim())
+      .where((e) => e.isNotEmpty)
+      .toList();
 
   @override
   void initState() {
@@ -42,6 +52,13 @@ class _ProgramEditorScreenState extends ConsumerState<ProgramEditorScreen> {
       _nameCtrl.text = p.name;
       _descCtrl.text = p.description;
       _type = p.type;
+      _goal = p.goal;
+      _level = p.level;
+      _durationCtrl.text =
+          p.durationMinutes > 0 ? p.durationMinutes.toString() : '';
+      _equipmentCtrl.text = p.equipmentNeeded.join(', ');
+      _locationCtrl.text = p.location.join(', ');
+      _tagsCtrl.text = p.tags.join(', ');
       _days = p.days.map((d) => _DayEdit.fromDay(d)).toList();
     } else {
       _days = [_DayEdit(name: 'Day 1', exercises: [])];
@@ -58,6 +75,10 @@ class _ProgramEditorScreenState extends ConsumerState<ProgramEditorScreen> {
   void dispose() {
     _nameCtrl.dispose();
     _descCtrl.dispose();
+    _durationCtrl.dispose();
+    _equipmentCtrl.dispose();
+    _locationCtrl.dispose();
+    _tagsCtrl.dispose();
     for (final d in _days) {
       d.dispose();
     }
@@ -77,6 +98,12 @@ class _ProgramEditorScreenState extends ConsumerState<ProgramEditorScreen> {
       type: _type,
       description: _descCtrl.text.trim(),
       days: _days.map((d) => d.toDay()).toList(),
+      goal: _goal,
+      level: _level,
+      durationMinutes: int.tryParse(_durationCtrl.text.trim()) ?? 0,
+      equipmentNeeded: _splitList(_equipmentCtrl.text),
+      location: _splitList(_locationCtrl.text),
+      tags: _splitList(_tagsCtrl.text),
     );
     if (widget.initial == null) {
       await ref.read(programsProvider.notifier).add(program);
@@ -162,6 +189,57 @@ class _ProgramEditorScreenState extends ConsumerState<ProgramEditorScreen> {
             controller: _descCtrl,
             decoration: const InputDecoration(labelText: 'Description'),
             maxLines: 2,
+          ),
+          const SizedBox(height: 8),
+          Row(children: [
+            Expanded(
+              child: DropdownButtonFormField<String>(
+                value: _goal.isEmpty ? '' : _goal,
+                items: _goals
+                    .map((g) => DropdownMenuItem(
+                        value: g, child: Text(g.isEmpty ? 'No Goal' : g)))
+                    .toList(),
+                onChanged: (v) => setState(() => _goal = v ?? ''),
+                decoration: const InputDecoration(labelText: 'Goal'),
+              ),
+            ),
+            const SizedBox(width: 8),
+            Expanded(
+              child: DropdownButtonFormField<String>(
+                value: _level.isEmpty ? '' : _level,
+                items: _levels
+                    .map((l) => DropdownMenuItem(
+                        value: l, child: Text(l.isEmpty ? 'Any Level' : l)))
+                    .toList(),
+                onChanged: (v) => setState(() => _level = v ?? ''),
+                decoration: const InputDecoration(labelText: 'Level'),
+              ),
+            ),
+          ]),
+          const SizedBox(height: 8),
+          TextField(
+            controller: _durationCtrl,
+            keyboardType: TextInputType.number,
+            decoration:
+                const InputDecoration(labelText: 'Duration (minutes)'),
+          ),
+          const SizedBox(height: 8),
+          TextField(
+            controller: _equipmentCtrl,
+            decoration: const InputDecoration(
+                labelText: 'Equipment needed (comma separated)'),
+          ),
+          const SizedBox(height: 8),
+          TextField(
+            controller: _locationCtrl,
+            decoration: const InputDecoration(
+                labelText: 'Location e.g. Home, Gym (comma separated)'),
+          ),
+          const SizedBox(height: 8),
+          TextField(
+            controller: _tagsCtrl,
+            decoration: const InputDecoration(
+                labelText: 'Tags (comma separated)'),
           ),
           const SizedBox(height: 16),
           Row(

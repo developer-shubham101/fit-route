@@ -46,11 +46,23 @@ class Program extends HiveObject {
   @HiveField(1)
   String name;
   @HiveField(2)
-  String type; // e.g. Full Body, PPL, Custom
+  String type;
   @HiveField(3)
   String description;
   @HiveField(4)
   List<ProgramDay> days;
+  @HiveField(5)
+  String goal;
+  @HiveField(6)
+  String level;
+  @HiveField(7)
+  int durationMinutes;
+  @HiveField(8)
+  List<String> equipmentNeeded;
+  @HiveField(9)
+  List<String> location;
+  @HiveField(10)
+  List<String> tags;
 
   Program({
     required this.id,
@@ -58,5 +70,13 @@ class Program extends HiveObject {
     this.type = 'Custom',
     this.description = '',
     required this.days,
-  });
+    this.goal = '',
+    this.level = '',
+    this.durationMinutes = 0,
+    List<String>? equipmentNeeded,
+    List<String>? location,
+    List<String>? tags,
+  })  : equipmentNeeded = equipmentNeeded ?? [],
+        location = location ?? [],
+        tags = tags ?? [];
 }

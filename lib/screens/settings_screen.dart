@@ -5,11 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:path_provider/path_provider.dart';
 import '../state/app_state.dart';
-import '../state/routines_state.dart';
 import '../state/workout_state.dart';
 import '../models/workout_entry.dart';
-import '../models/routine.dart';
-import '../models/exercise.dart';
 import '../utils/media.dart';
 
 class SettingsScreen extends ConsumerStatefulWidget {
@@ -40,7 +37,6 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
 
   Future<void> _exportJson() async {
     final entries = await ref.read(workoutEntryServiceProvider).getEntries();
-    final routines = await ref.read(routineServiceProvider).getRoutines();
 
     Map<String, dynamic> entryToMap(WorkoutEntry e) => {
           'id': e.id,
@@ -54,25 +50,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           'durationSeconds': e.durationSeconds,
         };
 
-    Map<String, dynamic> exerciseToMap(Exercise ex) => {
-          'id': ex.id,
-          'name': ex.name,
-          'defaultType': ex.defaultType,
-          'category': ex.category,
-          'difficulty': ex.difficulty,
-        };
-
-    Map<String, dynamic> routineToMap(Routine r) => {
-          'id': r.id,
-          'name': r.name,
-          'goal': r.goal,
-          'level': r.level,
-          'exercises': r.exercises.map(exerciseToMap).toList(),
-        };
-
     final data = jsonEncode({
       'exportedAt': DateTime.now().toUtc().toIso8601String(),
-      'routines': routines.map(routineToMap).toList(),
       'workoutEntries': entries.map(entryToMap).toList(),
     });
 
@@ -126,7 +105,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
         builder: (_) => AlertDialog(
           title: const Text('Import backup?'),
           content: const Text(
-              'This will overwrite existing routines and workout entries.'),
+              'This will overwrite existing workout entries.'),
           actions: [
             TextButton(
                 onPressed: () => Navigator.pop(context, false),
@@ -138,29 +117,6 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
         ),
       );
       if (confirmed != true) return;
-
-      // Import routines
-      final routineService = ref.read(routineServiceProvider);
-      await routineService.clearAll();
-      final rawRoutines = (data['routines'] as List? ?? []);
-      for (final r in rawRoutines) {
-        final exercises = (r['exercises'] as List? ?? [])
-            .map((e) => Exercise(
-                  id: e['id'] ?? '',
-                  name: e['name'] ?? '',
-                  defaultType: e['defaultType'] ?? 'Bodyweight',
-                  category: e['category'] ?? '',
-                  difficulty: e['difficulty'] ?? '',
-                ))
-            .toList();
-        await routineService.addRoutine(Routine(
-          id: r['id'] ?? '',
-          name: r['name'] ?? '',
-          goal: r['goal'] ?? '',
-          level: r['level'] ?? '',
-          exercises: exercises,
-        ));
-      }
 
       // Import workout entries
       final entryService = ref.read(workoutEntryServiceProvider);
@@ -180,7 +136,6 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
         ));
       }
 
-      ref.read(routinesProvider.notifier).load();
       ref.read(entriesProvider.notifier).load();
 
       if (!mounted) return;
@@ -199,7 +154,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
       builder: (_) => AlertDialog(
         title: const Text('Reset all data?'),
         content: const Text(
-            'This will clear profile, routines, and workout entries.'),
+            'This will clear profile and workout entries.'),
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(context, false),
@@ -213,7 +168,6 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     if (confirmed != true) return;
 
     await ref.read(userProfileServiceProvider).clearProfile();
-    await ref.read(routineServiceProvider).clearAll();
     await ref.read(workoutEntryServiceProvider).clearAll();
 
     if (!mounted) return;
@@ -315,7 +269,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           const Divider(height: 1),
           ListTile(
             title: const Text('Export data (JSON)'),
-            subtitle: const Text('Saves routines and history as JSON backup'),
+            subtitle: const Text('Saves workout history as JSON backup'),
             trailing: ElevatedButton.icon(
               onPressed: _exportJson,
               icon: const Icon(Icons.download),
@@ -356,7 +310,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           ListTile(
             title: const Text('Reset all data'),
             subtitle:
-                const Text('Clears profile, routines, and workout entries'),
+                const Text('Clears profile and workout entries'),
             trailing: ElevatedButton.icon(
               onPressed: _resetData,
               style:

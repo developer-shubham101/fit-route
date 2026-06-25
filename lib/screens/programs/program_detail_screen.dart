@@ -87,13 +87,31 @@ class _ProgramDetailScreenState extends ConsumerState<ProgramDetailScreen> {
       body: ListView(
         padding: const EdgeInsets.all(12),
         children: [
-          if (program.type.isNotEmpty)
-            Chip(label: Text(program.type)),
           if (program.description.isNotEmpty) ...[
             const SizedBox(height: 4),
             Text(program.description,
                 style: Theme.of(context).textTheme.bodyMedium),
           ],
+          const SizedBox(height: 8),
+          // ── metadata chips ──────────────────────────────────────────────
+          Wrap(
+            spacing: 8,
+            runSpacing: 4,
+            children: [
+              if (program.type.isNotEmpty) Chip(label: Text(program.type)),
+              if (program.goal.isNotEmpty)
+                Chip(label: Text('🎯 ${program.goal}')),
+              if (program.level.isNotEmpty)
+                Chip(label: Text('📶 ${program.level}')),
+              if (program.durationMinutes > 0)
+                Chip(label: Text('⏱ ${program.durationMinutes} min')),
+              for (final eq in program.equipmentNeeded)
+                Chip(label: Text('🏋 $eq')),
+              for (final loc in program.location)
+                Chip(label: Text('📍 $loc')),
+              for (final tag in program.tags) Chip(label: Text(tag)),
+            ],
+          ),
           const SizedBox(height: 12),
           if (program.days.isEmpty)
             const Center(child: Text('No days yet. Edit to add days.'))

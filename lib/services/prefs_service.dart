@@ -46,4 +46,18 @@ class PrefsService {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool(keySeededDefaults, value);
   }
+
+  Future<String?> getActiveProgramId() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString('active_program_id');
+  }
+
+  Future<void> setActiveProgramId(String? id) async {
+    final prefs = await SharedPreferences.getInstance();
+    if (id == null) {
+      await prefs.remove('active_program_id');
+    } else {
+      await prefs.setString('active_program_id', id);
+    }
+  }
 }
