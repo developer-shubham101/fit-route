@@ -215,7 +215,7 @@ class DashboardScreen extends ConsumerWidget {
                 onTap: () {
                   // navigate to Programs tab via HomeScreen
                   final homeState = context
-                      .findAncestorStateOfType<_HomeScreenState>();
+                      .findAncestorStateOfType<HomeScreenState>();
                   homeState?.setNavIndex(2);
                 },
               ),
@@ -239,7 +239,7 @@ class DashboardScreen extends ConsumerWidget {
                         TextButton(
                           onPressed: () {
                             final homeState = context
-                                .findAncestorStateOfType<_HomeScreenState>();
+                                .findAncestorStateOfType<HomeScreenState>();
                             homeState?.setNavIndex(2);
                           },
                           child: const Text('Change'),
