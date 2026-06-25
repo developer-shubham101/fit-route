@@ -5,6 +5,7 @@ import 'models/user_profile.dart';
 import 'models/routine.dart';
 import 'models/exercise.dart';
 import 'models/workout_entry.dart';
+import 'models/program.dart';
 import 'screens/root_router.dart';
 import 'state/app_state.dart';
 
@@ -15,6 +16,9 @@ void main() async {
   Hive.registerAdapter(RoutineAdapter());
   Hive.registerAdapter(ExerciseAdapter());
   Hive.registerAdapter(WorkoutEntryAdapter());
+  Hive.registerAdapter(ProgramExerciseAdapter());
+  Hive.registerAdapter(ProgramDayAdapter());
+  Hive.registerAdapter(ProgramAdapter());
   runApp(const ProviderScope(child: FitRouteApp()));
 }
 

@@ -13,6 +13,22 @@ class ExploreExercisesScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final exercises = ref.watch(filteredExerciseLibraryProvider);
+    final allExercises = ref.watch(exerciseLibraryProvider);
+    final filters = ref.watch(exploreFiltersProvider);
+
+    final categories = <String>{
+      for (final e in allExercises)
+        if (e.category.isNotEmpty) e.category
+    }.toList()..sort();
+    final equipments = <String>{
+      for (final e in allExercises)
+        for (final eq in e.equipment)
+          if (eq.isNotEmpty) eq
+    }.toList()..sort();
+    final difficulties = <String>{
+      for (final e in allExercises)
+        if (e.difficulty.isNotEmpty) e.difficulty
+    }.toList()..sort();
 
     Future<void> _addExercise() async {
       final changed = await Navigator.push(
@@ -127,12 +143,85 @@ class ExploreExercisesScreen extends ConsumerWidget {
       body: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.all(12.0),
+            padding: const EdgeInsets.fromLTRB(12, 12, 12, 4),
             child: TextField(
               decoration: const InputDecoration(
                   prefixIcon: Icon(Icons.search), hintText: 'Search exercises'),
               onChanged: (v) =>
                   ref.read(exerciseSearchQueryProvider.notifier).state = v,
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+            child: Wrap(
+              spacing: 8,
+              runSpacing: 4,
+              children: [
+                DropdownButton<String?>(
+                  value: filters.category,
+                  hint: const Text('Body Part'),
+                  isDense: true,
+                  items: [
+                    const DropdownMenuItem<String?>(
+                        value: null, child: Text('All')),
+                    for (final c in categories)
+                      DropdownMenuItem<String?>(value: c, child: Text(c)),
+                  ],
+                  onChanged: (v) =>
+                      ref.read(exploreFiltersProvider.notifier).setCategory(v),
+                ),
+                DropdownButton<String?>(
+                  value: filters.equipment,
+                  hint: const Text('Equipment'),
+                  isDense: true,
+                  items: [
+                    const DropdownMenuItem<String?>(
+                        value: null, child: Text('All')),
+                    for (final eq in equipments)
+                      DropdownMenuItem<String?>(value: eq, child: Text(eq)),
+                  ],
+                  onChanged: (v) =>
+                      ref.read(exploreFiltersProvider.notifier).setEquipment(v),
+                ),
+                DropdownButton<String?>(
+                  value: filters.difficulty,
+                  hint: const Text('Difficulty'),
+                  isDense: true,
+                  items: [
+                    const DropdownMenuItem<String?>(
+                        value: null, child: Text('All')),
+                    for (final d in difficulties)
+                      DropdownMenuItem<String?>(value: d, child: Text(d)),
+                  ],
+                  onChanged: (v) => ref
+                      .read(exploreFiltersProvider.notifier)
+                      .setDifficulty(v),
+                ),
+                FilterChip(
+                  label: const Text('Home'),
+                  selected: filters.homeOnly == true,
+                  onSelected: (v) => ref
+                      .read(exploreFiltersProvider.notifier)
+                      .setHomeOnly(v ? true : null),
+                ),
+                FilterChip(
+                  label: const Text('Bodyweight'),
+                  selected: filters.bodyweightOnly == true,
+                  onSelected: (v) => ref
+                      .read(exploreFiltersProvider.notifier)
+                      .setBodyweightOnly(v ? true : null),
+                ),
+                if (filters.category != null ||
+                    filters.equipment != null ||
+                    filters.difficulty != null ||
+                    filters.homeOnly != null ||
+                    filters.bodyweightOnly != null)
+                  TextButton(
+                    onPressed: () =>
+                        ref.read(exploreFiltersProvider.notifier).clear(),
+                    child: const Text('Clear'),
+                  ),
+              ],
             ),
           ),
           Expanded(

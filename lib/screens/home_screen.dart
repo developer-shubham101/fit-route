@@ -9,6 +9,7 @@ import 'settings_screen.dart';
 import 'trends_screen.dart';
 import 'explore/explore_exercises_screen.dart';
 import 'new_routine_screen.dart';
+import 'programs/programs_screen.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
@@ -224,6 +225,16 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             Wrap(
               spacing: 12,
               children: [
+                ElevatedButton.icon(
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (_) => const ProgramsScreen()));
+                  },
+                  icon: const Icon(Icons.calendar_month),
+                  label: const Text('Programs'),
+                ),
                 ElevatedButton.icon(
                   onPressed: () {
                     Navigator.push(

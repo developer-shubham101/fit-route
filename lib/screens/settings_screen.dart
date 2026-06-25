@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:convert';
 import 'package:fit_route/screens/welcome_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -7,6 +8,8 @@ import '../state/app_state.dart';
 import '../state/routines_state.dart';
 import '../state/workout_state.dart';
 import '../models/workout_entry.dart';
+import '../models/routine.dart';
+import '../models/exercise.dart';
 import '../utils/media.dart';
 
 class SettingsScreen extends ConsumerStatefulWidget {
@@ -33,6 +36,161 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
       _units = u;
       _loading = false;
     });
+  }
+
+  Future<void> _exportJson() async {
+    final entries = await ref.read(workoutEntryServiceProvider).getEntries();
+    final routines = await ref.read(routineServiceProvider).getRoutines();
+
+    Map<String, dynamic> entryToMap(WorkoutEntry e) => {
+          'id': e.id,
+          'exerciseId': e.exerciseId,
+          'exerciseName': e.exerciseName,
+          'routineId': e.routineId,
+          'type': e.type,
+          'externalWeight': e.externalWeight,
+          'reps': e.reps,
+          'timestamp': e.timestamp.toUtc().toIso8601String(),
+          'durationSeconds': e.durationSeconds,
+        };
+
+    Map<String, dynamic> exerciseToMap(Exercise ex) => {
+          'id': ex.id,
+          'name': ex.name,
+          'defaultType': ex.defaultType,
+          'category': ex.category,
+          'difficulty': ex.difficulty,
+        };
+
+    Map<String, dynamic> routineToMap(Routine r) => {
+          'id': r.id,
+          'name': r.name,
+          'goal': r.goal,
+          'level': r.level,
+          'exercises': r.exercises.map(exerciseToMap).toList(),
+        };
+
+    final data = jsonEncode({
+      'exportedAt': DateTime.now().toUtc().toIso8601String(),
+      'routines': routines.map(routineToMap).toList(),
+      'workoutEntries': entries.map(entryToMap).toList(),
+    });
+
+    final dir = await getApplicationDocumentsDirectory();
+    final file = File(
+        '${dir.path}/fitroute_backup_${DateTime.now().millisecondsSinceEpoch}.json');
+    await file.writeAsString(data);
+    if (!mounted) return;
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text('Exported to ${file.path}')));
+  }
+
+  Future<void> _importJson() async {
+    final dir = await getApplicationDocumentsDirectory();
+    final files = dir
+        .listSync()
+        .whereType<File>()
+        .where((f) => f.path.endsWith('.json'))
+        .toList()
+      ..sort((a, b) => b.path.compareTo(a.path));
+
+    if (!mounted) return;
+    if (files.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('No JSON backup files found')));
+      return;
+    }
+
+    final selected = await showDialog<File>(
+      context: context,
+      builder: (_) => SimpleDialog(
+        title: const Text('Select backup file'),
+        children: [
+          for (final f in files.take(10))
+            SimpleDialogOption(
+              onPressed: () => Navigator.pop(context, f),
+              child: Text(f.path.split(Platform.pathSeparator).last,
+                  overflow: TextOverflow.ellipsis),
+            ),
+        ],
+      ),
+    );
+    if (selected == null) return;
+
+    try {
+      final raw = await selected.readAsString();
+      final data = jsonDecode(raw) as Map<String, dynamic>;
+
+      final confirmed = await showDialog<bool>(
+        context: context,
+        builder: (_) => AlertDialog(
+          title: const Text('Import backup?'),
+          content: const Text(
+              'This will overwrite existing routines and workout entries.'),
+          actions: [
+            TextButton(
+                onPressed: () => Navigator.pop(context, false),
+                child: const Text('Cancel')),
+            ElevatedButton(
+                onPressed: () => Navigator.pop(context, true),
+                child: const Text('Import')),
+          ],
+        ),
+      );
+      if (confirmed != true) return;
+
+      // Import routines
+      final routineService = ref.read(routineServiceProvider);
+      await routineService.clearAll();
+      final rawRoutines = (data['routines'] as List? ?? []);
+      for (final r in rawRoutines) {
+        final exercises = (r['exercises'] as List? ?? [])
+            .map((e) => Exercise(
+                  id: e['id'] ?? '',
+                  name: e['name'] ?? '',
+                  defaultType: e['defaultType'] ?? 'Bodyweight',
+                  category: e['category'] ?? '',
+                  difficulty: e['difficulty'] ?? '',
+                ))
+            .toList();
+        await routineService.addRoutine(Routine(
+          id: r['id'] ?? '',
+          name: r['name'] ?? '',
+          goal: r['goal'] ?? '',
+          level: r['level'] ?? '',
+          exercises: exercises,
+        ));
+      }
+
+      // Import workout entries
+      final entryService = ref.read(workoutEntryServiceProvider);
+      await entryService.clearAll();
+      final rawEntries = (data['workoutEntries'] as List? ?? []);
+      for (final e in rawEntries) {
+        await entryService.addEntry(WorkoutEntry(
+          id: e['id'] ?? '',
+          exerciseId: e['exerciseId'] ?? '',
+          exerciseName: e['exerciseName'] ?? '',
+          routineId: e['routineId'] ?? '',
+          type: e['type'] ?? 'Bodyweight',
+          externalWeight: (e['externalWeight'] as num?)?.toDouble(),
+          reps: (e['reps'] as num?)?.toInt() ?? 0,
+          timestamp: DateTime.parse(e['timestamp']),
+          durationSeconds: (e['durationSeconds'] as num?)?.toInt() ?? 0,
+        ));
+      }
+
+      ref.read(routinesProvider.notifier).load();
+      ref.read(entriesProvider.notifier).load();
+
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Import successful')));
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text('Import failed: $e')));
+    }
   }
 
   Future<void> _resetData() async {
@@ -152,6 +310,26 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                 setState(() => _units = v);
                 await ref.read(prefsServiceProvider).setDefaultUnits(v);
               },
+            ),
+          ),
+          const Divider(height: 1),
+          ListTile(
+            title: const Text('Export data (JSON)'),
+            subtitle: const Text('Saves routines and history as JSON backup'),
+            trailing: ElevatedButton.icon(
+              onPressed: _exportJson,
+              icon: const Icon(Icons.download),
+              label: const Text('Export'),
+            ),
+          ),
+          const Divider(height: 1),
+          ListTile(
+            title: const Text('Import data (JSON)'),
+            subtitle: const Text('Restore from a JSON backup file'),
+            trailing: ElevatedButton.icon(
+              onPressed: _importJson,
+              icon: const Icon(Icons.upload),
+              label: const Text('Import'),
             ),
           ),
           const Divider(height: 1),

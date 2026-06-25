@@ -12,6 +12,7 @@ class ActiveWorkoutState {
   final String type; // Bodyweight or External
   final double? externalWeight;
   final DateTime startedAt;
+  final int restSeconds;
 
   ActiveWorkoutState({
     required this.routineId,
@@ -20,6 +21,7 @@ class ActiveWorkoutState {
     required this.type,
     this.externalWeight,
     required this.startedAt,
+    this.restSeconds = 60,
   });
 }
 
