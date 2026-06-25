@@ -45,14 +45,16 @@
 * ☑ Filter routines
 * ☑ Open routine
 
-### Future
+### Dashboard
 
-* ☐ Dashboard summary
-* ☐ Today's workout
+* ☑ Dashboard summary
+* ☑ Today's workout
+* ☑ Recent workout card
+* ☑ Personal records
+* ☑ Weekly summary
+* ☑ Tab-based home (Dashboard + Routines tabs)
+* ☑ Bottom navigation bar (Home / History / Trends / Programs / Settings)
 * ☐ Continue previous workout
-* ☐ Recent workout card
-* ☐ Personal records
-* ☐ Weekly summary
 
 ---
 

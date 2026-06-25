@@ -35,6 +35,7 @@ class DashboardScreen extends ConsumerWidget {
           ref.invalidate(entriesProvider);
         },
         child: ListView(
+          physics: const AlwaysScrollableScrollPhysics(),
           padding: const EdgeInsets.all(16),
           children: [
             // ── greeting ──
