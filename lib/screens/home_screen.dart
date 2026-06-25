@@ -27,6 +27,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         index: _navIndex,
         children: const [
           _HomeTab(),
+          ExploreExercisesScreen(),
           HistoryScreen(),
           TrendsScreen(),
           ProgramsScreen(),
@@ -39,13 +40,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         type: BottomNavigationBarType.fixed,
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+          BottomNavigationBarItem(icon: Icon(Icons.explore), label: 'Explore'),
           BottomNavigationBarItem(icon: Icon(Icons.history), label: 'History'),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.bar_chart), label: 'Trends'),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.calendar_month), label: 'Programs'),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.settings), label: 'Settings'),
+          BottomNavigationBarItem(icon: Icon(Icons.bar_chart), label: 'Trends'),
+          BottomNavigationBarItem(icon: Icon(Icons.calendar_month), label: 'Programs'),
+          BottomNavigationBarItem(icon: Icon(Icons.settings), label: 'Settings'),
         ],
       ),
     );
@@ -81,17 +80,6 @@ class _HomeTabState extends ConsumerState<_HomeTab>
     return Scaffold(
       appBar: AppBar(
         title: const Text('FitRoute'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.explore),
-            tooltip: 'Explore',
-            onPressed: () => Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (_) => const ExploreExercisesScreen()),
-            ),
-          ),
-        ],
         bottom: TabBar(
           controller: _tabController,
           tabs: const [

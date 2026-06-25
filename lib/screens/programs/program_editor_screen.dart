@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../models/program.dart';
+import '../../models/exercise.dart';
 import '../../state/program_state.dart';
 import '../../state/app_state.dart';
 import '../../utils/units.dart';
+import '../explore/exercise_picker_screen.dart';
 
 class ProgramEditorScreen extends ConsumerStatefulWidget {
   final Program? initial;
@@ -99,7 +101,25 @@ class _ProgramEditorScreenState extends ConsumerState<ProgramEditorScreen> {
   }
 
   Future<void> _addExercise(int dayIdx) async {
-    final result = await showExerciseDialog(context, null, _units);
+    // Step 1: pick from library
+    final picked = await Navigator.push<Exercise>(
+      context,
+      MaterialPageRoute(builder: (_) => const ExercisePickerScreen()),
+    );
+    if (picked == null) return;
+    // Step 2: configure sets/reps/weight
+    final result = await showExerciseDialog(
+      context,
+      ProgramExercise(
+        exerciseId: picked.id,
+        exerciseName: picked.name,
+        targetSets: picked.setsRecommended > 0 ? picked.setsRecommended : 3,
+        targetReps: picked.repsRecommended > 0 ? picked.repsRecommended : 10,
+        targetWeightKg: null,
+        targetRestSeconds: 60,
+      ),
+      _units,
+    );
     if (result != null) setState(() => _days[dayIdx].exercises.add(result));
   }
 
@@ -244,10 +264,11 @@ class _DayEdit {
   void dispose() => nameCtrl.dispose();
 }
 
-// ── reusable exercise dialog ─────────────────────────────────────────────────
+// ── reusable exercise config dialog ─────────────────────────────────────────
+/// Shows sets/reps/weight/rest config for a [ProgramExercise].
+/// [initial] must already have exerciseId and exerciseName set.
 Future<ProgramExercise?> showExerciseDialog(
     BuildContext context, ProgramExercise? initial, String units) async {
-  final nameCtrl = TextEditingController(text: initial?.exerciseName ?? '');
   final setsCtrl =
       TextEditingController(text: (initial?.targetSets ?? 3).toString());
   final repsCtrl =
@@ -261,18 +282,15 @@ Future<ProgramExercise?> showExerciseDialog(
       TextEditingController(text: (initial?.targetRestSeconds ?? 60).toString());
   final notesCtrl = TextEditingController(text: initial?.notes ?? '');
   final unitLabel = UnitsUtil.unitLabel(units);
+  final exerciseName = initial?.exerciseName ?? '';
+  final exerciseId = initial?.exerciseId ?? DateTime.now().millisecondsSinceEpoch.toString();
 
   return showDialog<ProgramExercise>(
     context: context,
     builder: (ctx) => AlertDialog(
-      title: Text(initial == null ? 'Add Exercise' : 'Edit Exercise'),
+      title: Text(exerciseName.isNotEmpty ? exerciseName : 'Configure Exercise'),
       content: SingleChildScrollView(
         child: Column(mainAxisSize: MainAxisSize.min, children: [
-          TextField(
-              controller: nameCtrl,
-              decoration: const InputDecoration(
-                  labelText: 'Exercise name', isDense: true)),
-          const SizedBox(height: 8),
           Row(children: [
             Expanded(
               child: TextField(
@@ -318,8 +336,6 @@ Future<ProgramExercise?> showExerciseDialog(
             child: const Text('Cancel')),
         ElevatedButton(
           onPressed: () {
-            final name = nameCtrl.text.trim();
-            if (name.isEmpty) return;
             final sets = int.tryParse(setsCtrl.text) ?? 3;
             final reps = int.tryParse(repsCtrl.text) ?? 10;
             final rest = int.tryParse(restCtrl.text) ?? 60;
@@ -329,9 +345,8 @@ Future<ProgramExercise?> showExerciseDialog(
             Navigator.pop(
               ctx,
               ProgramExercise(
-                exerciseId: initial?.exerciseId ??
-                    DateTime.now().millisecondsSinceEpoch.toString(),
-                exerciseName: name,
+                exerciseId: exerciseId,
+                exerciseName: exerciseName,
                 targetSets: sets,
                 targetReps: reps,
                 targetWeightKg: wKg,

@@ -1,5 +1,102 @@
+# ─────────────────────────────────────────────────────────────
+#  FitRoute — Flutter Command Reference
+# ─────────────────────────────────────────────────────────────
+
+# ── Setup ─────────────────────────────────────────────────────
 flutter pub get
+flutter pub upgrade
+flutter pub outdated
+
+# ── Code Generation ───────────────────────────────────────────
+flutter pub run build_runner build
+flutter pub run build_runner build --delete-conflicting-outputs
+flutter pub run build_runner watch --delete-conflicting-outputs
+
+# ── Assets ────────────────────────────────────────────────────
 flutter pub run flutter_launcher_icons:main
 flutter pub run flutter_native_splash:create
+flutter pub run flutter_native_splash:remove
 
-flutter pub run build_runner build
+# ── Run ───────────────────────────────────────────────────────
+flutter run                                          # debug on connected device
+flutter run --release                                # release on connected device
+flutter run --profile                                # profile mode
+flutter run -d chrome                                # web (debug)
+flutter run -d windows                               # windows desktop
+flutter run --dart-define=ENV=dev                    # with env var
+
+# ── Debug Build ───────────────────────────────────────────────
+flutter build apk --debug                            # Android debug APK
+flutter build ios --debug --no-codesign              # iOS debug (no signing)
+flutter build windows --debug                        # Windows debug
+
+# ── Profile Build ─────────────────────────────────────────────
+flutter build apk --profile
+flutter build ios --profile --no-codesign
+
+# ── Release Build ─────────────────────────────────────────────
+
+# Android
+flutter build apk --release                          # single fat APK
+flutter build apk --release --split-per-abi          # split APKs (arm64, arm32, x86_64)
+flutter build appbundle --release                    # AAB for Play Store
+
+# with version override
+flutter build appbundle --release --build-name=1.0.3 --build-number=4
+
+# iOS
+flutter build ios --release --no-codesign            # without signing
+flutter build ios --release                          # with signing (requires Xcode setup)
+flutter build ipa --release                          # IPA for App Store
+
+# Web
+flutter build web --release
+flutter build web --release --web-renderer canvaskit
+flutter build web --release --web-renderer html
+
+# Windows
+flutter build windows --release
+
+# ── Install & Deploy ──────────────────────────────────────────
+flutter install                                      # install debug build on device
+adb install build/app/outputs/flutter-apk/app-release.apk
+
+# ── Clean ─────────────────────────────────────────────────────
+flutter clean
+flutter clean && flutter pub get
+flutter clean && flutter pub get && flutter pub run build_runner build --delete-conflicting-outputs
+
+# ── Test ──────────────────────────────────────────────────────
+flutter test                                         # all tests
+flutter test test/widget_test.dart                   # specific file
+flutter test --coverage                              # with coverage report
+
+# ── Analyze & Format ──────────────────────────────────────────
+flutter analyze
+dart format .
+dart format lib/
+dart fix --apply
+
+# ── Devices & Doctor ──────────────────────────────────────────
+flutter devices
+flutter doctor
+flutter doctor -v
+
+# ── Versioning ────────────────────────────────────────────────
+# current: version: 1.0.3+4  (pubspec.yaml)
+# format:  --build-name=<versionName> --build-number=<versionCode>
+flutter build appbundle --release --build-name=1.0.4 --build-number=5
+
+# ── Logs ──────────────────────────────────────────────────────
+flutter logs                                         # stream device logs
+adb logcat | grep flutter                            # Android only
+
+# ── Useful Shortcuts ──────────────────────────────────────────
+# Full clean + regen + run
+flutter clean && flutter pub get && flutter pub run build_runner build --delete-conflicting-outputs && flutter run
+
+# Release APK (split ABI) — recommended for sideload distribution
+flutter build apk --release --split-per-abi
+
+# Release AAB — for Play Store upload
+flutter build appbundle --release

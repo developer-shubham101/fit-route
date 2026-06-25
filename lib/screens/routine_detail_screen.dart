@@ -4,7 +4,10 @@ import '../state/routines_state.dart';
 import '../models/exercise.dart';
 import '../state/workout_state.dart';
 import '../state/app_state.dart';
+import '../state/explore/explore_state.dart';
 import 'active_exercise_screen.dart';
+import 'explore/exercise_picker_screen.dart';
+import 'explore/exercise_edit_page.dart';
 
 class RoutineDetailScreen extends ConsumerWidget {
   final String routineId;
@@ -16,32 +19,24 @@ class RoutineDetailScreen extends ConsumerWidget {
     final routine = routines.firstWhere((r) => r.id == routineId);
 
     Future<void> addExerciseDialog() async {
-      final nameController = TextEditingController();
-      final result = await showDialog<String>(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: const Text('Add Exercise'),
-          content: TextField(
-            controller: nameController,
-            decoration: const InputDecoration(labelText: 'Exercise name'),
-          ),
-          actions: [
-            TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: const Text('Cancel')),
-            ElevatedButton(
-                onPressed: () => Navigator.pop(context, nameController.text),
-                child: const Text('Add')),
-          ],
-        ),
+      final ex = await Navigator.push<Exercise>(
+        context,
+        MaterialPageRoute(builder: (_) => const ExercisePickerScreen()),
       );
-      if (result != null && result.trim().isNotEmpty) {
-        await ref.read(routinesProvider.notifier).addExerciseToRoutine(
-              routineId,
-              Exercise(
-                  id: DateTime.now().millisecondsSinceEpoch.toString(),
-                  name: result.trim()),
-            );
+      if (ex != null) {
+        await ref
+            .read(routinesProvider.notifier)
+            .addExerciseToRoutine(routineId, ex);
+      }
+    }
+
+    Future<void> editExerciseInLibrary(Exercise ex) async {
+      final changed = await Navigator.push<bool>(
+        context,
+        MaterialPageRoute(builder: (_) => ExerciseEditPage(initial: ex)),
+      );
+      if (changed == true) {
+        ref.read(exerciseLibraryProvider.notifier).load();
       }
     }
 
@@ -163,12 +158,15 @@ class RoutineDetailScreen extends ConsumerWidget {
                         onSelected: (value) {
                           if (value == 'rename') {
                             renameExerciseDialog(ex);
+                          } else if (value == 'edit') {
+                            editExerciseInLibrary(ex);
                           } else if (value == 'delete') {
                             confirmDeleteExercise(ex);
                           }
                         },
                         itemBuilder: (context) => const [
                           PopupMenuItem(value: 'rename', child: Text('Rename')),
+                          PopupMenuItem(value: 'edit', child: Text('Edit exercise')),
                           PopupMenuItem(value: 'delete', child: Text('Delete')),
                         ],
                       ),
