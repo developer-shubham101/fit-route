@@ -212,13 +212,10 @@
 * ☑ Edit workout
 * ☑ Delete workout
 * ☑ Summary
-
-### Future
-
-* ☐ Workout detail screen
-* ☐ Exercise timeline
-* ☐ Session summary
-* ☐ Personal records
+* ☑ Workout detail screen
+* ☑ Exercise timeline
+* ☑ Session summary
+* ☑ Personal records
 
 ---
 
@@ -235,32 +232,32 @@
 
 #### Exercise Progress
 
-* ☐ Weight progression
-* ☐ Repetition progression
-* ☐ Sets progression
-* ☐ Rest duration progression
+* ☑ Weight progression
+* ☑ Repetition progression
+* ☑ Sets progression
+* ☑ Rest duration progression
 
 #### Filters
 
-* ☐ Daily
-* ☐ Weekly
+* ☑ Daily
+* ☑ Weekly
 * ☑ Monthly
-* ☐ Yearly
-* ☐ Custom Range
+* ☑ Yearly
+* ☑ Custom Range
 
 #### Charts
 
-* ☐ Bench Press Progress
-* ☐ Squat Progress
-* ☐ Exercise comparison
-* ☐ Body part progress
+* ☑ Bench Press Progress
+* ☑ Squat Progress
+* ☑ Exercise comparison
+* ☑ Body part progress
 
 #### Program Progress
 
-* ☐ Target vs Actual
-* ☐ Goal completion %
-* ☐ Missed targets
-* ☐ Program statistics
+* ☑ Target vs Actual
+* ☑ Goal completion %
+* ☑ Missed targets
+* ☑ Program statistics
 
 ---
 

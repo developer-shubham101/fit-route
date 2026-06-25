@@ -6,6 +6,7 @@ import '../state/history_state.dart';
 import '../state/routines_state.dart';
 import '../utils/units.dart';
 import '../models/workout_entry.dart';
+import 'workout_detail_screen.dart';
 
 class HistoryScreen extends ConsumerWidget {
   const HistoryScreen({super.key});
@@ -259,6 +260,16 @@ class HistoryScreen extends ConsumerWidget {
                           return ExpansionTile(
                             title: Text(dateLabel),
                             initiallyExpanded: groupIdx == 0,
+                            trailing: IconButton(
+                              icon: const Icon(Icons.open_in_new, size: 18),
+                              tooltip: 'View detail',
+                              onPressed: () => Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (_) => WorkoutDetailScreen(
+                                        group: group)),
+                              ),
+                            ),
                             children: group.entries.map((e) {
                               final weightText = e.externalWeight != null
                                   ? UnitsUtil.formatWeight(

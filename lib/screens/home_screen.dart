@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../state/routines_state.dart';
-import '../state/workout_state.dart';
 import 'routine_detail_screen.dart';
 import 'new_routine_screen.dart';
 import 'dashboard_screen.dart';
@@ -23,7 +22,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    ref.read(entriesProvider.notifier).load();
     return Scaffold(
       body: IndexedStack(
         index: _navIndex,
