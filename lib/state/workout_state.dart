@@ -5,28 +5,6 @@ import '../services/workout_entry_service.dart';
 final workoutEntryServiceProvider =
     Provider<WorkoutEntryService>((ref) => WorkoutEntryService());
 
-class ActiveWorkoutState {
-  final String routineId;
-  final String exerciseId;
-  final String exerciseName;
-  final String type; // Bodyweight or External
-  final double? externalWeight;
-  final DateTime startedAt;
-  final int restSeconds;
-
-  ActiveWorkoutState({
-    required this.routineId,
-    required this.exerciseId,
-    required this.exerciseName,
-    required this.type,
-    this.externalWeight,
-    required this.startedAt,
-    this.restSeconds = 60,
-  });
-}
-
-final activeWorkoutProvider = StateProvider<ActiveWorkoutState?>((ref) => null);
-
 final entriesProvider =
     StateNotifierProvider<WorkoutEntriesNotifier, List<WorkoutEntry>>(
         (ref) => WorkoutEntriesNotifier(ref));

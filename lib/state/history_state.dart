@@ -3,14 +3,14 @@ import '../models/workout_entry.dart';
 import 'workout_state.dart';
 
 class HistoryFilters {
-  final String? routineId;
+  final String? programId;
   final String? exerciseId;
-  final String? type; // 'Bodyweight' | 'External' | null
+  final String? type;
   final String query;
-  final String dateRange; // 'all' | 'today' | 'week' | 'month'
+  final String dateRange;
 
   const HistoryFilters({
-    this.routineId,
+    this.programId,
     this.exerciseId,
     this.type,
     this.query = '',
@@ -18,13 +18,13 @@ class HistoryFilters {
   });
 
   HistoryFilters copyWith(
-      {String? routineId,
+      {String? programId,
       String? exerciseId,
       String? type,
       String? query,
       String? dateRange}) {
     return HistoryFilters(
-      routineId: routineId ?? this.routineId,
+      programId: programId ?? this.programId,
       exerciseId: exerciseId ?? this.exerciseId,
       type: type ?? this.type,
       query: query ?? this.query,
@@ -40,8 +40,8 @@ final historyFiltersProvider =
 class HistoryFiltersNotifier extends StateNotifier<HistoryFilters> {
   HistoryFiltersNotifier() : super(const HistoryFilters());
 
-  void setRoutine(String? routineId) =>
-      state = state.copyWith(routineId: routineId);
+  void setProgram(String? programId) =>
+      state = state.copyWith(programId: programId);
   void setExercise(String? exerciseId) =>
       state = state.copyWith(exerciseId: exerciseId);
   void setType(String? type) => state = state.copyWith(type: type);
@@ -88,9 +88,9 @@ final filteredEntriesProvider = Provider<List<WorkoutEntry>>((ref) {
   }
 
   return entries.where((e) {
-    if (filters.routineId != null &&
-        filters.routineId!.isNotEmpty &&
-        e.routineId != filters.routineId) return false;
+    if (filters.programId != null &&
+        filters.programId!.isNotEmpty &&
+        e.routineId != filters.programId) return false;
     if (filters.exerciseId != null &&
         filters.exerciseId!.isNotEmpty &&
         e.exerciseId != filters.exerciseId) return false;

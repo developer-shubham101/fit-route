@@ -224,8 +224,7 @@ final trackedExercisesProvider =
 });
 
 // ── Body part volume provider ─────────────────────────────────────────────────
-// Uses exerciseName as proxy — groups by first word (rough body-part heuristic)
-// Real body-part data would come from Exercise model; here we use routineId grouping
+// Groups by exerciseName — each exercise treated as its own category
 final bodyPartVolumeProvider = Provider<Map<String, double>>((ref) {
   final entries = ref.watch(entriesProvider);
   final Map<String, double> vol = {};
