@@ -33,24 +33,33 @@ class DashboardScreen extends ConsumerWidget {
         : now.hour < 17
             ? 'Good afternoon'
             : 'Good evening';
-    final name = profile != null ? '' : '';
-
-    return RefreshIndicator(
-      onRefresh: () async => ref.invalidate(entriesProvider),
-      child: ListView(
-        physics: const AlwaysScrollableScrollPhysics(),
-        padding: const EdgeInsets.all(16),
-        children: [
-          // ── greeting ──
-          Text('$greeting${name.isNotEmpty ? ", $name" : ""}! 💪',
-              style: Theme.of(context).textTheme.headlineSmall),
-          const SizedBox(height: 4),
-          Text(_formatDate(now),
-              style: Theme.of(context)
-                  .textTheme
-                  .bodySmall
-                  ?.copyWith(color: Colors.grey)),
-          const SizedBox(height: 16),
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('$greeting! 💪'),
+        centerTitle: false,
+        bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(20),
+          child: Padding(
+            padding: const EdgeInsets.only(left: 16, bottom: 6),
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                _formatDate(now),
+                style: Theme.of(context)
+                    .textTheme
+                    .bodySmall
+                    ?.copyWith(color: Colors.white70),
+              ),
+            ),
+          ),
+        ),
+      ),
+      body: RefreshIndicator(
+        onRefresh: () async => ref.invalidate(entriesProvider),
+        child: ListView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          padding: const EdgeInsets.all(16),
+          children: [
 
           // ── active program / session ──
           DashboardSectionHeader(
@@ -129,7 +138,8 @@ class DashboardScreen extends ConsumerWidget {
               ),
             const SizedBox(height: 20),
           ],
-        ],
+          ],
+        ),
       ),
     );
   }
