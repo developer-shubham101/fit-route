@@ -4,7 +4,7 @@ class PrefsService {
   static const String keyOnboardingComplete = 'onboarding_complete';
   static const String keyDefaultUnits =
       'default_units'; // 'metric' or 'imperial'
-  static const String keySeededDefaults = 'seeded_default_routines';
+  static const String keySeededDefaults = 'seeded_default_routines'; // legacy key, unused
   static const String keySeededSampleData = 'seeded_sample_data';
 
   Future<bool> getSeededSampleData() async {
