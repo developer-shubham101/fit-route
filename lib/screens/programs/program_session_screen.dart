@@ -186,6 +186,7 @@ class _ProgramSessionScreenState extends ConsumerState<ProgramSessionScreen> {
                         backgroundColor: doneCount == exercises.length
                             ? Colors.green
                             : colorScheme.primary,
+                        foregroundColor: Colors.white,
                       ),
                     ),
                   );
@@ -316,6 +317,7 @@ class _ProgramSessionScreenState extends ConsumerState<ProgramSessionScreen> {
                               backgroundColor: allDone
                                   ? Colors.grey.shade600
                                   : colorScheme.primary,
+                              foregroundColor: Colors.white,
                               padding: const EdgeInsets.symmetric(vertical: 10),
                             ),
                           ),

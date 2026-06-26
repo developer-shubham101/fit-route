@@ -321,6 +321,7 @@ class _TimerView extends StatelessWidget {
               style: ElevatedButton.styleFrom(
                 backgroundColor:
                     started ? Colors.redAccent : colorScheme.primary,
+                foregroundColor: Colors.white,
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(16)),
               ),
@@ -566,6 +567,7 @@ class _LogForm extends StatelessWidget {
               onPressed: onSubmit,
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.green,
+                foregroundColor: Colors.white,
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(14)),
               ),

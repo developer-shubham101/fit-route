@@ -263,6 +263,7 @@ class ActiveProgramCard extends ConsumerWidget {
                   label: Text('Continue — ${nextEx.exerciseName}'),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: colorScheme.primary,
+                    foregroundColor: colorScheme.onPrimary,
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12)),
                   ),
@@ -283,6 +284,7 @@ class ActiveProgramCard extends ConsumerWidget {
                   icon: const Icon(Icons.play_arrow_rounded),
                   label: Text('Start ${day?.name ?? program.name}'),
                   style: ElevatedButton.styleFrom(
+                    foregroundColor: colorScheme.onPrimary,
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12)),
                     padding: const EdgeInsets.symmetric(vertical: 12),
