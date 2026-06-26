@@ -386,27 +386,31 @@ Exercise 1
 
 ↓
 
-Set 1
+Set Entry Screen
 
 ↓
 
-Save
+Start Set
 
 ↓
 
-Rest
+End Set
 
 ↓
 
-Set 2
+Log Reps
 
 ↓
 
-Rest
+Log Weight
 
 ↓
 
-Exercise Complete
+Rest Countdown (if enabled)
+
+↓
+
+Next Set
 
 ↓
 
@@ -421,11 +425,22 @@ Finish Workout
 Summary
 ```
 
-No searching.
+The current flow is focused on one set at a time.
 
-No editing.
+During each set the user:
 
-No dialogs.
+- taps Start Set to begin the timer
+- taps End Set when the set is complete
+- selects the completed reps
+- enters the used weight or leaves it as bodyweight
+- optionally uses the rest countdown before moving to the next set
+- submits the set result and continues
+
+The experience is intentionally simple:
+
+- no searching during the set flow
+- no extra dialogs
+- no complex setup while the workout is in progress
 
 ---
 
