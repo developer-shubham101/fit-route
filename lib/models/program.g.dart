@@ -111,13 +111,20 @@ class ProgramAdapter extends TypeAdapter<Program> {
       type: fields[2] as String,
       description: fields[3] as String,
       days: (fields[4] as List).cast<ProgramDay>(),
+      goal: fields[5] == null ? '' : fields[5] as String,
+      level: fields[6] == null ? '' : fields[6] as String,
+      durationMinutes: fields[7] == null ? 0 : fields[7] as int,
+      equipmentNeeded:
+          fields[8] == null ? [] : (fields[8] as List?)?.cast<String>(),
+      location: fields[9] == null ? [] : (fields[9] as List?)?.cast<String>(),
+      tags: fields[10] == null ? [] : (fields[10] as List?)?.cast<String>(),
     );
   }
 
   @override
   void write(BinaryWriter writer, Program obj) {
     writer
-      ..writeByte(5)
+      ..writeByte(11)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -127,7 +134,19 @@ class ProgramAdapter extends TypeAdapter<Program> {
       ..writeByte(3)
       ..write(obj.description)
       ..writeByte(4)
-      ..write(obj.days);
+      ..write(obj.days)
+      ..writeByte(5)
+      ..write(obj.goal)
+      ..writeByte(6)
+      ..write(obj.level)
+      ..writeByte(7)
+      ..write(obj.durationMinutes)
+      ..writeByte(8)
+      ..write(obj.equipmentNeeded)
+      ..writeByte(9)
+      ..write(obj.location)
+      ..writeByte(10)
+      ..write(obj.tags);
   }
 
   @override

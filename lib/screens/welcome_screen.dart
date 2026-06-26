@@ -19,23 +19,23 @@ class _WelcomeScreenState extends ConsumerState<WelcomeScreen> {
   double? _bmi;
   bool _initialized = false;
 
-  void _calculateBMI() {
-    @override
-    void didChangeDependencies() {
-      super.didChangeDependencies();
-      if (!_initialized) {
-        final profile = ref.read(profileProvider);
-        if (profile != null) {
-          _ageController.text = profile.age.toString();
-          _weightController.text = profile.weight.toString();
-          _heightController.text = profile.height.toString();
-          _gender = profile.gender;
-          _bmi = profile.bmi;
-        }
-        _initialized = true;
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (!_initialized) {
+      final profile = ref.read(profileProvider);
+      if (profile != null) {
+        _ageController.text = profile.age.toString();
+        _weightController.text = profile.weight.toString();
+        _heightController.text = profile.height.toString();
+        _gender = profile.gender;
+        _bmi = profile.bmi;
       }
+      _initialized = true;
     }
+  }
 
+  void _calculateBMI() {
     final weight = double.tryParse(_weightController.text);
     final height = double.tryParse(_heightController.text);
     if (weight != null && height != null && height > 0) {

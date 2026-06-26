@@ -51,17 +51,17 @@ class Program extends HiveObject {
   String description;
   @HiveField(4)
   List<ProgramDay> days;
-  @HiveField(5)
+  @HiveField(5, defaultValue: '')
   String goal;
-  @HiveField(6)
+  @HiveField(6, defaultValue: '')
   String level;
-  @HiveField(7)
+  @HiveField(7, defaultValue: 0)
   int durationMinutes;
-  @HiveField(8)
+  @HiveField(8, defaultValue: [])
   List<String> equipmentNeeded;
-  @HiveField(9)
+  @HiveField(9, defaultValue: [])
   List<String> location;
-  @HiveField(10)
+  @HiveField(10, defaultValue: [])
   List<String> tags;
 
   Program({
