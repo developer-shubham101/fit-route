@@ -8,28 +8,8 @@ import '../../state/workout_state.dart';
 import '../../state/program_state.dart';
 import '../../state/app_state.dart';
 import '../../utils/units.dart';
+import 'set_entry_screen.dart';
 
-// ── Weight presets (kg) ───────────────────────────────────────────────────────
-const _weightSteps = [
-  0.0, 2.5, 5.0, 7.5, 10.0, 12.5, 15.0, 17.5, 20.0, 22.5, 25.0,
-  27.5, 30.0, 35.0, 40.0, 45.0, 50.0, 55.0, 60.0, 70.0, 80.0, 90.0, 100.0,
-];
-
-double _prevWeight(double kg) {
-  for (int i = _weightSteps.length - 1; i >= 0; i--) {
-    if (_weightSteps[i] < kg - 0.01) return _weightSteps[i];
-  }
-  return 0.0;
-}
-
-double _nextWeight(double kg) {
-  for (final w in _weightSteps) {
-    if (w > kg + 0.01) return w;
-  }
-  return kg + 2.5;
-}
-
-// ── Main session screen ───────────────────────────────────────────────────────
 class ProgramSessionScreen extends ConsumerStatefulWidget {
   final Program program;
   final int dayIndex;
@@ -120,11 +100,10 @@ class _ProgramSessionScreenState extends ConsumerState<ProgramSessionScreen> {
     _refreshTodayEntries(allEntries);
 
     final exercises = _day.exercises;
-    final doneCount =
-        exercises.where((ex) {
-          final done = _todayByEx[ex.exerciseId]?.length ?? 0;
-          return done >= ex.targetSets;
-        }).length;
+    final doneCount = exercises.where((ex) {
+      final done = _todayByEx[ex.exerciseId]?.length ?? 0;
+      return done >= ex.targetSets;
+    }).length;
     final progress = exercises.isEmpty ? 0.0 : doneCount / exercises.length;
     final colorScheme = Theme.of(context).colorScheme;
 
@@ -149,7 +128,6 @@ class _ProgramSessionScreenState extends ConsumerState<ProgramSessionScreen> {
       ),
       body: Column(
         children: [
-          // ── progress header ──
           Container(
             color: colorScheme.surface,
             padding: const EdgeInsets.fromLTRB(16, 10, 16, 12),
@@ -190,7 +168,6 @@ class _ProgramSessionScreenState extends ConsumerState<ProgramSessionScreen> {
             ),
           ),
           const Divider(height: 1),
-          // ── exercise list ──
           Expanded(
             child: ListView.separated(
               padding: const EdgeInsets.fromLTRB(12, 12, 12, 24),
@@ -240,7 +217,6 @@ class _ProgramSessionScreenState extends ConsumerState<ProgramSessionScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // ── exercise header ──
                         Row(
                           children: [
                             Expanded(
@@ -269,8 +245,7 @@ class _ProgramSessionScreenState extends ConsumerState<ProgramSessionScreen> {
                         Text(
                           '${ex.targetSets} sets × ${ex.targetReps} reps'
                           '${targetWDisplay != null ? ' · ${targetWDisplay.toStringAsFixed(1)} $unitLabel' : ''}',
-                          style:
-                              const TextStyle(fontSize: 12, color: Colors.grey),
+                          style: const TextStyle(fontSize: 12, color: Colors.grey),
                         ),
                         if (ex.notes.isNotEmpty)
                           Padding(
@@ -283,7 +258,6 @@ class _ProgramSessionScreenState extends ConsumerState<ProgramSessionScreen> {
                           ),
                         const SizedBox(height: 10),
 
-                        // ── set progress dots ──
                         Row(
                           children: List.generate(
                             math.max(ex.targetSets, doneSets.length),
@@ -299,15 +273,11 @@ class _ProgramSessionScreenState extends ConsumerState<ProgramSessionScreen> {
                                   decoration: BoxDecoration(
                                     shape: BoxShape.circle,
                                     color: done
-                                        ? isExtra
-                                            ? Colors.orange
-                                            : Colors.green
+                                        ? isExtra ? Colors.orange : Colors.green
                                         : Colors.transparent,
                                     border: Border.all(
                                       color: done
-                                          ? isExtra
-                                              ? Colors.orange
-                                              : Colors.green
+                                          ? isExtra ? Colors.orange : Colors.green
                                           : colorScheme.outlineVariant,
                                       width: 2,
                                     ),
@@ -322,8 +292,7 @@ class _ProgramSessionScreenState extends ConsumerState<ProgramSessionScreen> {
                                           child: Text('${i + 1}',
                                               style: TextStyle(
                                                   fontSize: 11,
-                                                  color: colorScheme
-                                                      .onSurfaceVariant)),
+                                                  color: colorScheme.onSurfaceVariant)),
                                         ),
                                 ),
                               );
@@ -333,19 +302,11 @@ class _ProgramSessionScreenState extends ConsumerState<ProgramSessionScreen> {
 
                         const SizedBox(height: 10),
 
-                        // ── start set button ──
                         SizedBox(
                           width: double.infinity,
                           child: ElevatedButton.icon(
-                            onPressed: () => _openSetEntry(
-                              context,
-                              ex,
-                              doneSets.length + 1,
-                              targetWKg,
-                            ),
-                            icon: Icon(
-                                allDone ? Icons.add : Icons.play_arrow,
-                                size: 18),
+                            onPressed: () => _openSetEntry(context, ex, doneSets.length + 1, targetWKg),
+                            icon: Icon(allDone ? Icons.add : Icons.play_arrow, size: 18),
                             label: Text(doneSets.isEmpty
                                 ? 'Start Set 1'
                                 : allDone
@@ -355,8 +316,7 @@ class _ProgramSessionScreenState extends ConsumerState<ProgramSessionScreen> {
                               backgroundColor: allDone
                                   ? Colors.grey.shade600
                                   : colorScheme.primary,
-                              padding:
-                                  const EdgeInsets.symmetric(vertical: 10),
+                              padding: const EdgeInsets.symmetric(vertical: 10),
                             ),
                           ),
                         ),
@@ -378,10 +338,10 @@ class _ProgramSessionScreenState extends ConsumerState<ProgramSessionScreen> {
     int setNumber,
     double? targetWeightKg,
   ) async {
-    final result = await Navigator.push<_SetResult>(
+    final result = await Navigator.push<SetResult>(
       context,
       MaterialPageRoute(
-        builder: (_) => _SetEntryScreen(
+        builder: (_) => SetEntryScreen(
           exerciseName: ex.exerciseName,
           setNumber: setNumber,
           targetReps: ex.targetReps,
@@ -405,407 +365,5 @@ class _ProgramSessionScreenState extends ConsumerState<ProgramSessionScreen> {
       durationSeconds: result.durationSeconds,
     );
     await ref.read(entriesProvider.notifier).addEntry(entry);
-  }
-}
-
-// ── Set entry screen ──────────────────────────────────────────────────────────
-class _SetResult {
-  final int reps;
-  final double? weightKg;
-  final int durationSeconds;
-  const _SetResult(this.reps, this.weightKg, this.durationSeconds);
-}
-
-class _SetEntryScreen extends StatefulWidget {
-  final String exerciseName;
-  final int setNumber;
-  final int targetReps;
-  final double? targetWeightKg;
-  final int restSeconds;
-  final String units;
-
-  const _SetEntryScreen({
-    required this.exerciseName,
-    required this.setNumber,
-    required this.targetReps,
-    required this.targetWeightKg,
-    required this.restSeconds,
-    required this.units,
-  });
-
-  @override
-  State<_SetEntryScreen> createState() => _SetEntryScreenState();
-}
-
-class _SetEntryScreenState extends State<_SetEntryScreen>
-    with SingleTickerProviderStateMixin {
-  Timer? _setTimer;
-  Timer? _restTimer;
-  int _elapsed = 0;
-  int _restRemaining = 0;
-
-  bool _started = false;
-  bool _finished = false;
-  bool _resting = false;
-
-  late int _reps;
-  late double _weightKg;
-
-  late AnimationController _restAnim;
-
-  String get _unitLabel => UnitsUtil.unitLabel(widget.units);
-
-  @override
-  void initState() {
-    super.initState();
-    _reps = widget.targetReps;
-    _weightKg = widget.targetWeightKg ?? 0.0;
-    _restAnim = AnimationController(vsync: this);
-  }
-
-  @override
-  void dispose() {
-    _setTimer?.cancel();
-    _restTimer?.cancel();
-    _restAnim.dispose();
-    super.dispose();
-  }
-
-  String _fmt(int s) =>
-      '${(s ~/ 60).toString().padLeft(2, '0')}:${(s % 60).toString().padLeft(2, '0')}';
-
-  void _startSet() {
-    setState(() => _started = true);
-    _setTimer = Timer.periodic(
-        const Duration(seconds: 1),
-        (_) => mounted ? setState(() => _elapsed++) : null);
-  }
-
-  void _endSet() {
-    _setTimer?.cancel();
-    setState(() => _finished = true);
-    if (widget.restSeconds > 0) _startRest();
-  }
-
-  void _startRest() {
-    _restRemaining = widget.restSeconds;
-    _restAnim.duration = Duration(seconds: widget.restSeconds);
-    _restAnim.forward(from: 0);
-    setState(() => _resting = true);
-    _restTimer = Timer.periodic(const Duration(seconds: 1), (_) {
-      if (_restRemaining <= 1) {
-        _restTimer?.cancel();
-        if (mounted) setState(() => _resting = false);
-      } else {
-        if (mounted) setState(() => _restRemaining--);
-      }
-    });
-  }
-
-  void _skipRest() {
-    _restTimer?.cancel();
-    _restAnim.stop();
-    setState(() => _resting = false);
-  }
-
-  void _submit() {
-    final wKg = _weightKg > 0 ? _weightKg : null;
-    Navigator.pop(context, _SetResult(_reps, wKg, _elapsed));
-  }
-
-  Widget _stepper({
-    required String label,
-    required VoidCallback onMinus,
-    required VoidCallback onPlus,
-    required String value,
-  }) {
-    return Column(
-      children: [
-        Text(label, style: const TextStyle(fontSize: 12, color: Colors.grey)),
-        const SizedBox(height: 6),
-        Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            _CircleBtn(icon: Icons.remove, onTap: onMinus),
-            const SizedBox(width: 12),
-            GestureDetector(
-              onTap: () => _editValue(label),
-              child: Container(
-                constraints: const BoxConstraints(minWidth: 80),
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-                decoration: BoxDecoration(
-                  border: Border.all(
-                      color: Theme.of(context).colorScheme.primary),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Text(value,
-                    textAlign: TextAlign.center,
-                    style: const TextStyle(
-                        fontSize: 22, fontWeight: FontWeight.bold)),
-              ),
-            ),
-            const SizedBox(width: 12),
-            _CircleBtn(icon: Icons.add, onTap: onPlus),
-          ],
-        ),
-      ],
-    );
-  }
-
-  Future<void> _editValue(String label) async {
-    final isReps = label.toLowerCase().contains('rep');
-    final ctrl = TextEditingController(
-        text: isReps
-            ? '$_reps'
-            : UnitsUtil.fromKg(_weightKg, widget.units).toStringAsFixed(1));
-    await showDialog(
-      context: context,
-      builder: (_) => AlertDialog(
-        title: Text('Edit $label'),
-        content: TextField(
-          controller: ctrl,
-          keyboardType: const TextInputType.numberWithOptions(decimal: true),
-          autofocus: true,
-          decoration: InputDecoration(
-              labelText: label, suffixText: isReps ? '' : _unitLabel),
-        ),
-        actions: [
-          TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text('Cancel')),
-          ElevatedButton(
-              onPressed: () {
-                if (isReps) {
-                  final v = int.tryParse(ctrl.text);
-                  if (v != null && v > 0) setState(() => _reps = v);
-                } else {
-                  final v = double.tryParse(ctrl.text);
-                  if (v != null && v >= 0) {
-                    setState(() => _weightKg = UnitsUtil.toKg(v, widget.units));
-                  }
-                }
-                Navigator.pop(context);
-              },
-              child: const Text('Set')),
-        ],
-      ),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final wDisplay = UnitsUtil.fromKg(_weightKg, widget.units);
-    final wLabel = _weightKg > 0
-        ? '${wDisplay.toStringAsFixed(1)} $_unitLabel'
-        : 'Bodyweight';
-    final colorScheme = Theme.of(context).colorScheme;
-
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('${widget.exerciseName} — Set ${widget.setNumber}'),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.fromLTRB(24, 16, 24, 24),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            // ── timer + state ──
-            Center(
-              child: Column(
-                children: [
-                  Text(
-                    _fmt(_elapsed),
-                    style: TextStyle(
-                      fontSize: 64,
-                      fontWeight: FontWeight.bold,
-                      letterSpacing: 4,
-                      color: _started && !_finished
-                          ? colorScheme.primary
-                          : Colors.grey,
-                    ),
-                  ),
-                  const SizedBox(height: 4),
-                  AnimatedSwitcher(
-                    duration: const Duration(milliseconds: 200),
-                    child: Text(
-                      key: ValueKey(_started ? _finished : 'idle'),
-                      _started
-                          ? _finished
-                              ? '✓ Set complete'
-                              : 'In progress…'
-                          : 'Tap Start to begin',
-                      style: TextStyle(
-                          color: _finished ? Colors.green : Colors.grey),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 20),
-
-            // ── start / end button ──
-            if (!_finished)
-              ElevatedButton.icon(
-                onPressed: _started ? _endSet : _startSet,
-                icon: Icon(_started ? Icons.stop_rounded : Icons.play_arrow),
-                label: Text(_started ? 'End Set' : 'Start Set'),
-                style: ElevatedButton.styleFrom(
-                  minimumSize: const Size.fromHeight(52),
-                  backgroundColor:
-                      _started ? Colors.redAccent : colorScheme.primary,
-                ),
-              ),
-
-            const SizedBox(height: 28),
-
-            // ── steppers ──
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                _stepper(
-                  label: 'Reps',
-                  onMinus: () =>
-                      setState(() => _reps = (_reps - 1).clamp(1, 999)),
-                  onPlus: () => setState(() => _reps++),
-                  value: '$_reps',
-                ),
-                _stepper(
-                  label: 'Weight ($_unitLabel)',
-                  onMinus: () =>
-                      setState(() => _weightKg = _prevWeight(_weightKg)),
-                  onPlus: () =>
-                      setState(() => _weightKg = _nextWeight(_weightKg)),
-                  value: wLabel,
-                ),
-              ],
-            ),
-
-            const SizedBox(height: 24),
-
-            // ── rest timer ──
-            if (_finished && widget.restSeconds > 0)
-              AnimatedSwitcher(
-                duration: const Duration(milliseconds: 300),
-                child: _resting
-                    ? _RestCountdown(
-                        key: const ValueKey('rest'),
-                        remaining: _restRemaining,
-                        total: widget.restSeconds,
-                        onSkip: _skipRest,
-                        animation: _restAnim,
-                      )
-                    : OutlinedButton.icon(
-                        key: const ValueKey('restart-rest'),
-                        onPressed: _startRest,
-                        icon: const Icon(Icons.replay),
-                        label: const Text('Restart Rest'),
-                      ),
-              ),
-
-            const Spacer(),
-
-            // ── submit ──
-            ElevatedButton(
-              onPressed: _submit,
-              style: ElevatedButton.styleFrom(
-                  minimumSize: const Size.fromHeight(52),
-                  backgroundColor: Colors.green),
-              child: Text(
-                  'Log — $_reps reps  ${_weightKg > 0 ? '@ $wLabel' : '(bodyweight)'}'),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-// ── Animated circular rest countdown ─────────────────────────────────────────
-class _RestCountdown extends StatelessWidget {
-  final int remaining;
-  final int total;
-  final VoidCallback onSkip;
-  final AnimationController animation;
-
-  const _RestCountdown({
-    super.key,
-    required this.remaining,
-    required this.total,
-    required this.onSkip,
-    required this.animation,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-    final progress = total > 0 ? remaining / total : 0.0;
-
-    return Column(
-      children: [
-        Stack(
-          alignment: Alignment.center,
-          children: [
-            SizedBox(
-              width: 100,
-              height: 100,
-              child: AnimatedBuilder(
-                animation: animation,
-                builder: (_, __) => CircularProgressIndicator(
-                  value: progress,
-                  strokeWidth: 6,
-                  backgroundColor: colorScheme.surfaceContainerHighest,
-                  valueColor: AlwaysStoppedAnimation<Color>(
-                    Color.lerp(Colors.redAccent, colorScheme.primary,
-                        progress)!,
-                  ),
-                ),
-              ),
-            ),
-            Column(
-              children: [
-                Text(
-                  '${remaining}s',
-                  style: const TextStyle(
-                      fontSize: 26, fontWeight: FontWeight.bold),
-                ),
-                const Text('rest', style: TextStyle(fontSize: 11, color: Colors.grey)),
-              ],
-            ),
-          ],
-        ),
-        const SizedBox(height: 8),
-        TextButton.icon(
-          onPressed: onSkip,
-          icon: const Icon(Icons.skip_next, size: 16),
-          label: const Text('Skip Rest'),
-        ),
-      ],
-    );
-  }
-}
-
-// ── Circle button ─────────────────────────────────────────────────────────────
-class _CircleBtn extends StatelessWidget {
-  final IconData icon;
-  final VoidCallback onTap;
-  const _CircleBtn({required this.icon, required this.onTap});
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      borderRadius: BorderRadius.circular(24),
-      onTap: onTap,
-      child: Container(
-        width: 44,
-        height: 44,
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          border: Border.all(color: Theme.of(context).colorScheme.primary),
-        ),
-        child: Icon(icon,
-            size: 22, color: Theme.of(context).colorScheme.primary),
-      ),
-    );
   }
 }

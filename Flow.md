@@ -2,7 +2,7 @@ I think we've reached the point where the app has a clear identity. It's **not**
 
 > **FitRoute is a Personal Workout Logbook that can optionally guide users through workout templates.**
 
-That means **everything revolves around recording workouts**, and templates are just one way to start a workout.
+That means **everything revolves around recording workouts**, and templates are just one way to start a workout session.
 
 ---
 
@@ -12,31 +12,23 @@ That means **everything revolves around recording workouts**, and templates are 
                 Onboarding
                      │
                      ▼
-              Exercise Library
-                     │
-                     ▼
-            Workout Templates
-        (Built-in + User Created)
-                     │
-                     ▼
               Home Dashboard
                      │
-     ┌───────────────┼────────────────┐
-     ▼               ▼                ▼
-Start Today's     Quick Workout   Browse Exercises
-Template             (Empty)           (Single)
-     │               │                │
-     └───────────────┼────────────────┘
-                     ▼
-             Workout Session
-                     ▼
-              Workout History
-                     ▼
-            Personal Records
-                     ▼
-             Progress Graphs
-                     ▼
-        AI Coach (Future Version)
+      ┌──────────────┼─────────────────────┐
+      ▼              ▼                     ▼
+Workout Session   Workout Templates      Exercise Library
+      │              │                     │
+      ▼              ▼                     ▼
+Workout History   Template Discovery    Custom Exercises
+      │
+      ▼
+Personal Records
+      │
+      ▼
+Progress Graphs
+      │
+      ▼
+AI Coach (Future Version)
 ```
 
 ---
@@ -95,7 +87,7 @@ The goal is **optional**.
 
 The Home screen has one responsibility.
 
-> Help the user start today's workout.
+> Help the user start a workout session quickly.
 
 ```text
 ──────────────────────────
@@ -216,7 +208,7 @@ START
 Contains
 
 ```text
-Built-in
+Built-in Exercises
 
 +
 
@@ -247,11 +239,7 @@ Never during workouts.
 
 # Workout Templates
 
-This replaces both
-
-✔ Programs
-
-✔ Routines
+Templates are optional guidance, not the primary product feature.
 
 A Workout Template contains
 
@@ -359,7 +347,7 @@ Every template remains selectable.
 
 # Active Template
 
-Only one template can be active.
+Only one template can be active at a time.
 
 ```text
 Current
@@ -387,7 +375,7 @@ Changing doesn't delete history.
 
 # Workout Session
 
-This becomes the heart of the app.
+This is the heart of the app.
 
 ```text
 Workout Started
@@ -443,7 +431,7 @@ No dialogs.
 
 # Workout Summary
 
-Only session information.
+Only session information is shown.
 
 ```text
 Workout Complete
@@ -467,7 +455,7 @@ Nothing about goals.
 
 # History
 
-History is a logbook.
+History is a logbook of completed sessions.
 
 ```text
 June 20
@@ -597,7 +585,7 @@ Graphs can switch between
 
 The app never forces users.
 
-It simply observes.
+It simply observes and suggests when appropriate.
 
 Example
 
@@ -633,7 +621,7 @@ User decides.
 
 # Users Without Templates
 
-Some people never follow a program.
+Some people never follow a program or template.
 
 That's perfectly supported.
 
@@ -757,20 +745,18 @@ Examples
                 AI Coach (Future)
 ```
 
-## One last suggestion that I think will define the app
+## Product definition
 
-I would stop thinking of **Workout Templates** as the primary feature.
+Workout sessions are the primary feature of FitRoute.
 
-Instead, make **Workout Sessions** the primary feature.
+Everything else exists to help the user start, complete, and reflect on a workout session:
 
-Everything else exists to help the user start a workout session:
-
-* The **Exercise Library** helps build workouts.
-* **Workout Templates** provide reusable plans.
-* The **Home Dashboard** gets users into today's session quickly.
-* **History** remembers every session.
-* **Personal Records** summarize the best performances from all sessions.
-* **Progress** visualizes improvements across sessions.
-* **AI** analyzes sessions in the future.
+* The Exercise Library helps users choose exercises.
+* Workout Templates provide optional structure and guidance.
+* The Home Dashboard helps users begin a session quickly.
+* History remembers every completed session.
+* Personal Records summarize the best performances from all sessions.
+* Progress visualizes improvements across sessions.
+* AI can analyze sessions in the future.
 
 That keeps the app centered on the activity users care about most: recording and improving their workouts.
