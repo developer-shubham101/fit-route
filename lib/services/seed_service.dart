@@ -1,251 +1,160 @@
+import 'dart:convert';
+import 'package:flutter/services.dart' show rootBundle;
+import '../models/exercise.dart';
 import '../models/workout_entry.dart';
 import '../models/program.dart';
+import '../services/exercise_service.dart';
 import '../services/workout_entry_service.dart';
 import '../services/program_service.dart';
 import '../services/prefs_service.dart';
 
 class SeedService {
+  final ExerciseService _exercises;
   final WorkoutEntryService _entries;
   final ProgramService _programs;
   final PrefsService _prefs;
 
-  SeedService(this._entries, this._programs, this._prefs);
+  SeedService(this._exercises, this._entries, this._programs, this._prefs);
 
   Future<void> seedIfNeeded() async {
     final done = await _prefs.getSeededSampleData();
     if (done) return;
-    await _seedEntries();
-    await _seedPrograms();
+    await _seedExercises();
+    await _seedFromJson();
     await _prefs.setSeededSampleData(true);
   }
 
-  Future<void> _seedEntries() async {
-    final now = DateTime.now().toUtc();
-
-    // helper to create an entry offset by days/hours from now
-    WorkoutEntry entry(
-      String exId,
-      String exName,
-      String routineId,
-      String type,
-      int reps,
-      double? weight,
-      int daysAgo,
-      int hoursOffset,
-    ) {
-      final ts = DateTime(now.year, now.month, now.day - daysAgo,
-              10 + hoursOffset, 0, 0)
-          .toUtc();
-      return WorkoutEntry(
-        id: '${ts.millisecondsSinceEpoch}_${exId}_$reps',
-        exerciseId: exId,
-        exerciseName: exName,
-        routineId: routineId,
-        type: type,
-        externalWeight: weight,
-        reps: reps,
-        timestamp: ts,
-        durationSeconds: 45 + reps * 3,
-      );
+  // ── Exercises from fitroute_exercises_detailed.json ───────────────────────
+  Future<void> _seedExercises() async {
+    final jsonStr = await rootBundle
+        .loadString('assets/json/fitroute_exercises_detailed.json');
+    final List<dynamic> data = json.decode(jsonStr);
+    for (final ex in data) {
+      await _exercises.addExercise(Exercise(
+        id: ex['id'].toString(),
+        name: ex['name'] ?? '',
+        defaultType: ex['type'] ?? 'Bodyweight',
+        description: ex['description'] ?? '',
+        requiresExternal: ex['requires_external'] ?? false,
+        equipment: (ex['equipment'] as List<dynamic>?)
+                ?.map((e) => e.toString())
+                .toList() ??
+            [],
+        suitableAtHome: (ex['locations'] as List<dynamic>?)
+                ?.contains('Home') ??
+            false,
+        suitableAtGym: (ex['locations'] as List<dynamic>?)
+                ?.contains('Gym') ??
+            false,
+        category: ex['category'] ?? '',
+        difficulty: ex['difficulty'] ?? '',
+        locations: (ex['locations'] as List<dynamic>?)
+                ?.map((e) => e.toString())
+                .toList() ??
+            [],
+        instructions: ex['instructions'] ?? '',
+        commonMistakes: ex['common_mistakes'] ?? '',
+        benefits: ex['benefits'] ?? '',
+        safetyTips: ex['safety_tips'] ?? '',
+        primaryMuscles: (ex['primary_muscles'] as List<dynamic>?)
+                ?.map((e) => e.toString())
+                .toList() ??
+            [],
+        secondaryMuscles: (ex['secondary_muscles'] as List<dynamic>?)
+                ?.map((e) => e.toString())
+                .toList() ??
+            [],
+        setsRecommended: (ex['sets_recommended'] as num?)?.toInt() ?? 0,
+        repsRecommended: (ex['reps_recommended'] as num?)?.toInt() ?? 0,
+        timeRecommended: ex['time_recommended'],
+        caloriesBurnEstimate:
+            (ex['calories_burn_estimate'] as num?)?.toInt() ?? 0,
+        progressionLevel: ex['progression_level'] ?? '',
+        regressionLevel: ex['regression_level'] ?? '',
+        imageUrl: ex['image_url'] ?? '',
+        gifUrl: ex['gif_url'] ?? '',
+        videoUrl: ex['video_url'] ?? '',
+        audioCue: ex['audio_cue'] ?? '',
+        tags: (ex['tags'] as List<dynamic>?)
+                ?.map((e) => e.toString())
+                .toList() ??
+            [],
+        indoorOutdoor: ex['indoor_outdoor'] ?? '',
+        isFavorite: ex['is_favorite'] ?? false,
+        isBodyweight: ex['is_bodyweight'] ?? false,
+        requiresPartner: ex['requires_partner'] ?? false,
+        warmupOrMain: ex['warmup_or_main'] ?? '',
+      ));
     }
-
-    // --- today ---
-    await _entries.addEntry(
-        entry('ex_bench', 'Bench Press', 'routine_push', 'External', 10, 60.0, 0, 0));
-    await _entries.addEntry(
-        entry('ex_bench', 'Bench Press', 'routine_push', 'External', 8, 65.0, 0, 0));
-    await _entries.addEntry(
-        entry('ex_bench', 'Bench Press', 'routine_push', 'External', 6, 70.0, 0, 0));
-    await _entries.addEntry(
-        entry('ex_pushup', 'Push-Up', 'routine_push', 'Bodyweight', 20, null, 0, 1));
-    await _entries.addEntry(
-        entry('ex_pushup', 'Push-Up', 'routine_push', 'Bodyweight', 18, null, 0, 1));
-
-    // --- yesterday ---
-    await _entries.addEntry(
-        entry('ex_squat', 'Squat', 'routine_legs', 'External', 10, 80.0, 1, 0));
-    await _entries.addEntry(
-        entry('ex_squat', 'Squat', 'routine_legs', 'External', 8, 85.0, 1, 0));
-    await _entries.addEntry(
-        entry('ex_squat', 'Squat', 'routine_legs', 'External', 6, 90.0, 1, 0));
-    await _entries.addEntry(
-        entry('ex_lunge', 'Lunge', 'routine_legs', 'Bodyweight', 12, null, 1, 1));
-
-    // --- 2 days ago ---
-    await _entries.addEntry(
-        entry('ex_pullup', 'Pull-Up', 'routine_pull', 'Bodyweight', 10, null, 2, 0));
-    await _entries.addEntry(
-        entry('ex_pullup', 'Pull-Up', 'routine_pull', 'Bodyweight', 8, null, 2, 0));
-    await _entries.addEntry(
-        entry('ex_row', 'Barbell Row', 'routine_pull', 'External', 10, 60.0, 2, 1));
-    await _entries.addEntry(
-        entry('ex_row', 'Barbell Row', 'routine_pull', 'External', 8, 65.0, 2, 1));
-
-    // --- 3 days ago ---
-    await _entries.addEntry(
-        entry('ex_ohp', 'Overhead Press', 'routine_push', 'External', 8, 40.0, 3, 0));
-    await _entries.addEntry(
-        entry('ex_ohp', 'Overhead Press', 'routine_push', 'External', 6, 45.0, 3, 0));
-    await _entries.addEntry(
-        entry('ex_dip', 'Dip', 'routine_push', 'Bodyweight', 12, null, 3, 1));
-
-    // --- 5 days ago ---
-    await _entries.addEntry(
-        entry('ex_deadlift', 'Deadlift', 'routine_legs', 'External', 5, 100.0, 5, 0));
-    await _entries.addEntry(
-        entry('ex_deadlift', 'Deadlift', 'routine_legs', 'External', 5, 110.0, 5, 0));
-    await _entries.addEntry(
-        entry('ex_deadlift', 'Deadlift', 'routine_legs', 'External', 3, 120.0, 5, 0));
-
-    // --- 7 days ago (last week) ---
-    await _entries.addEntry(
-        entry('ex_bench', 'Bench Press', 'routine_push', 'External', 10, 55.0, 7, 0));
-    await _entries.addEntry(
-        entry('ex_bench', 'Bench Press', 'routine_push', 'External', 8, 60.0, 7, 0));
-    await _entries.addEntry(
-        entry('ex_squat', 'Squat', 'routine_legs', 'External', 10, 75.0, 8, 0));
-    await _entries.addEntry(
-        entry('ex_squat', 'Squat', 'routine_legs', 'External', 8, 80.0, 8, 0));
-
-    // --- 14 days ago ---
-    await _entries.addEntry(
-        entry('ex_bench', 'Bench Press', 'routine_push', 'External', 10, 50.0, 14, 0));
-    await _entries.addEntry(
-        entry('ex_deadlift', 'Deadlift', 'routine_legs', 'External', 5, 90.0, 14, 0));
-    await _entries.addEntry(
-        entry('ex_pullup', 'Pull-Up', 'routine_pull', 'Bodyweight', 7, null, 14, 1));
   }
 
-  Future<void> _seedPrograms() async {
-    // Push Pull Legs program
-    await _programs.add(Program(
-      id: 'prog_ppl',
-      name: 'Push Pull Legs',
-      type: 'Push Pull Legs',
-      description: '3-day split targeting all major muscle groups.',
-      days: [
-        ProgramDay(name: 'Push Day', exercises: [
-          ProgramExercise(
-              exerciseId: 'ex_bench',
-              exerciseName: 'Bench Press',
-              targetSets: 4,
-              targetReps: 8,
-              targetWeightKg: 60.0,
-              targetRestSeconds: 90),
-          ProgramExercise(
-              exerciseId: 'ex_ohp',
-              exerciseName: 'Overhead Press',
-              targetSets: 3,
-              targetReps: 10,
-              targetWeightKg: 40.0,
-              targetRestSeconds: 90),
-          ProgramExercise(
-              exerciseId: 'ex_dip',
-              exerciseName: 'Dip',
-              targetSets: 3,
-              targetReps: 12,
-              targetRestSeconds: 60),
-          ProgramExercise(
-              exerciseId: 'ex_pushup',
-              exerciseName: 'Push-Up',
-              targetSets: 3,
-              targetReps: 20,
-              targetRestSeconds: 60),
-        ]),
-        ProgramDay(name: 'Pull Day', exercises: [
-          ProgramExercise(
-              exerciseId: 'ex_pullup',
-              exerciseName: 'Pull-Up',
-              targetSets: 4,
-              targetReps: 8,
-              targetRestSeconds: 90),
-          ProgramExercise(
-              exerciseId: 'ex_row',
-              exerciseName: 'Barbell Row',
-              targetSets: 4,
-              targetReps: 8,
-              targetWeightKg: 60.0,
-              targetRestSeconds: 90),
-        ]),
-        ProgramDay(name: 'Leg Day', exercises: [
-          ProgramExercise(
-              exerciseId: 'ex_squat',
-              exerciseName: 'Squat',
-              targetSets: 4,
-              targetReps: 8,
-              targetWeightKg: 80.0,
-              targetRestSeconds: 120),
-          ProgramExercise(
-              exerciseId: 'ex_deadlift',
-              exerciseName: 'Deadlift',
-              targetSets: 3,
-              targetReps: 5,
-              targetWeightKg: 100.0,
-              targetRestSeconds: 120),
-          ProgramExercise(
-              exerciseId: 'ex_lunge',
-              exerciseName: 'Lunge',
-              targetSets: 3,
-              targetReps: 12,
-              targetRestSeconds: 60),
-        ]),
-      ],
-    ));
+  // ── Programs + workout entries from fitroute_seed_data.json ───────────────
+  Future<void> _seedFromJson() async {
+    final raw =
+        await rootBundle.loadString('assets/json/fitroute_seed_data.json');
+    final data = json.decode(raw) as Map<String, dynamic>;
 
-    // Full Body Beginner
-    await _programs.add(Program(
-      id: 'prog_fullbody',
-      name: 'Full Body Beginner',
-      type: 'Full Body',
-      description: 'Simple 3-day full body routine for beginners.',
-      days: [
-        ProgramDay(name: 'Day A', exercises: [
-          ProgramExercise(
-              exerciseId: 'ex_squat',
-              exerciseName: 'Squat',
-              targetSets: 3,
-              targetReps: 10,
-              targetWeightKg: 40.0,
-              targetRestSeconds: 90),
-          ProgramExercise(
-              exerciseId: 'ex_bench',
-              exerciseName: 'Bench Press',
-              targetSets: 3,
-              targetReps: 10,
-              targetWeightKg: 40.0,
-              targetRestSeconds: 90),
-          ProgramExercise(
-              exerciseId: 'ex_row',
-              exerciseName: 'Barbell Row',
-              targetSets: 3,
-              targetReps: 10,
-              targetWeightKg: 40.0,
-              targetRestSeconds: 90),
-        ]),
-        ProgramDay(name: 'Day B', exercises: [
-          ProgramExercise(
-              exerciseId: 'ex_squat',
-              exerciseName: 'Squat',
-              targetSets: 3,
-              targetReps: 10,
-              targetWeightKg: 42.5,
-              targetRestSeconds: 90),
-          ProgramExercise(
-              exerciseId: 'ex_ohp',
-              exerciseName: 'Overhead Press',
-              targetSets: 3,
-              targetReps: 10,
-              targetWeightKg: 30.0,
-              targetRestSeconds: 90),
-          ProgramExercise(
-              exerciseId: 'ex_deadlift',
-              exerciseName: 'Deadlift',
-              targetSets: 1,
-              targetReps: 5,
-              targetWeightKg: 60.0,
-              targetRestSeconds: 120),
-        ]),
-      ],
-    ));
+    // Programs
+    for (final p in (data['programs'] as List? ?? [])) {
+      final days = (p['days'] as List? ?? []).map<ProgramDay>((d) {
+        final exercises =
+            (d['exercises'] as List? ?? []).map<ProgramExercise>((e) {
+          return ProgramExercise(
+            exerciseId: e['exercise_id'] ?? '',
+            exerciseName: e['exercise_name'] ?? '',
+            targetSets: (e['target_sets'] as num?)?.toInt() ?? 3,
+            targetReps: (e['target_reps'] as num?)?.toInt() ?? 10,
+            targetWeightKg: (e['target_weight_kg'] as num?)?.toDouble(),
+            targetRestSeconds:
+                (e['target_rest_seconds'] as num?)?.toInt() ?? 60,
+            notes: e['notes'] ?? '',
+          );
+        }).toList();
+        return ProgramDay(name: d['name'] ?? '', exercises: exercises);
+      }).toList();
+
+      await _programs.add(Program(
+        id: p['id'] ?? '',
+        name: p['name'] ?? '',
+        type: p['type'] ?? 'Custom',
+        description: p['description'] ?? '',
+        goal: p['goal'] ?? '',
+        level: p['level'] ?? '',
+        durationMinutes: (p['duration_minutes'] as num?)?.toInt() ?? 0,
+        equipmentNeeded: (p['equipment_needed'] as List?)
+                ?.map((e) => e.toString())
+                .toList() ??
+            [],
+        location: (p['location'] as List?)
+                ?.map((e) => e.toString())
+                .toList() ??
+            [],
+        tags: (p['tags'] as List?)?.map((e) => e.toString()).toList() ?? [],
+        days: days,
+      ));
+    }
+
+    // Workout entries
+    final now = DateTime.now();
+    final rawEntries = (data['workout_entries'] as List? ?? []);
+    for (int i = 0; i < rawEntries.length; i++) {
+      final e = rawEntries[i];
+      final daysAgo = (e['days_ago'] as num?)?.toInt() ?? 0;
+      final hour = (e['hour'] as num?)?.toInt() ?? 10;
+      final ts =
+          DateTime(now.year, now.month, now.day - daysAgo, hour, i % 60, 0)
+              .toUtc();
+      await _entries.addEntry(WorkoutEntry(
+        id: '${ts.millisecondsSinceEpoch}_${e['exercise_id']}_$i',
+        exerciseId: e['exercise_id'] ?? '',
+        exerciseName: e['exercise_name'] ?? '',
+        routineId: e['routine_id'] ?? '',
+        type: e['type'] ?? 'Bodyweight',
+        externalWeight: (e['external_weight'] as num?)?.toDouble(),
+        reps: (e['reps'] as num?)?.toInt() ?? 0,
+        timestamp: ts,
+        durationSeconds: 45 + ((e['reps'] as num?)?.toInt() ?? 0) * 3,
+      ));
+    }
   }
 }

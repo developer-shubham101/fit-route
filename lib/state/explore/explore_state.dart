@@ -17,7 +17,6 @@ class ExerciseLibraryNotifier extends StateNotifier<List<Exercise>> {
 
   Future<void> load() async {
     final svc = ref.read(exerciseServiceProvider);
-    await svc.seedDefaultsIfEmpty();
     state = await svc.getExercises();
   }
 

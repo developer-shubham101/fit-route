@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'models/user_profile.dart';
-import 'models/routine.dart';
 import 'models/exercise.dart';
 import 'models/workout_entry.dart';
 import 'models/program.dart';
 import 'screens/root_router.dart';
 import 'state/app_state.dart';
+import 'services/exercise_service.dart';
 import 'services/seed_service.dart';
 import 'services/workout_entry_service.dart';
 import 'services/program_service.dart';
@@ -17,7 +17,6 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Hive.initFlutter();
   Hive.registerAdapter(UserProfileAdapter());
-  Hive.registerAdapter(RoutineAdapter());
   Hive.registerAdapter(ExerciseAdapter());
   Hive.registerAdapter(WorkoutEntryAdapter());
   Hive.registerAdapter(ProgramExerciseAdapter());
@@ -25,6 +24,7 @@ void main() async {
   Hive.registerAdapter(ProgramAdapter());
   // Seed sample data on first run
   await SeedService(
+    ExerciseService(),
     WorkoutEntryService(),
     ProgramService(),
     PrefsService(),
