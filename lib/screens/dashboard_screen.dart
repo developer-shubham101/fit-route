@@ -134,7 +134,10 @@ class DashboardScreen extends ConsumerWidget {
                         .take(4)
                         .map((kv) {
                       final sets = kv.value;
-                      final totalReps = sets.fold(0, (s, e) => s + e.reps);
+                      final int totalReps = sets.fold<int>(
+                        0,
+                            (int s, e) => s + (e.reps as num).toInt(),
+                      );
                       final bestW = sets
                           .where((e) => e.externalWeight != null)
                           .fold<double?>(
