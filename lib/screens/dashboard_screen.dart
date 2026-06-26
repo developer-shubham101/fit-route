@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../state/history_state.dart';
 import '../state/app_state.dart';
 import '../state/program_state.dart';
+import '../models/program.dart';
 import 'home_screen.dart';
 import '../utils/units.dart';
 import 'programs/program_session_screen.dart';
@@ -18,10 +19,11 @@ class DashboardScreen extends ConsumerWidget {
     final records = ref.watch(personalRecordsProvider);
     final lastGroup = ref.watch(lastWorkoutGroupProvider);
     final activeProgram = ref.watch(activeProgramProvider);
+    final activeSession = ref.watch(activeSessionProvider);
+    final programs = ref.watch(programsProvider);
     final unitsAsync = ref.watch(unitsProvider);
 
     final units = unitsAsync.valueOrNull ?? 'metric';
-    final unitLabel = UnitsUtil.unitLabel(units);
 
     final now = DateTime.now();
     final greeting = now.hour < 12
@@ -51,6 +53,43 @@ class DashboardScreen extends ConsumerWidget {
                 ?.copyWith(color: Colors.grey),
           ),
           const SizedBox(height: 20),
+
+          // ── continue session banner ──
+          if (activeSession != null) ...[
+            Builder(builder: (ctx) {
+              final sessionProgram = programs.cast<Program?>().firstWhere(
+                    (p) => p?.id == activeSession.programId,
+                    orElse: () => null,
+                  );
+              if (sessionProgram == null) return const SizedBox.shrink();
+              final dayIdx = activeSession.dayIndex
+                  .clamp(0, sessionProgram.days.length - 1);
+              final dayName = sessionProgram.days.isNotEmpty
+                  ? sessionProgram.days[dayIdx].name
+                  : '';
+              return Card(
+                color: Theme.of(context).colorScheme.primaryContainer,
+                child: ListTile(
+                  leading: const Icon(Icons.play_circle_fill, size: 32),
+                  title: const Text('Session in progress',
+                      style: TextStyle(fontWeight: FontWeight.bold)),
+                  subtitle: Text(
+                      '${sessionProgram.name}${dayName.isNotEmpty ? ' · $dayName' : ''}'),
+                  trailing: ElevatedButton(
+                    onPressed: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => ProgramSessionScreen(
+                            program: sessionProgram, dayIndex: dayIdx),
+                      ),
+                    ),
+                    child: const Text('Continue'),
+                  ),
+                ),
+              );
+            }),
+            const SizedBox(height: 12),
+          ],
 
           // ── weekly summary ──
           _SectionHeader('This Week'),

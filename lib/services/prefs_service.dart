@@ -60,4 +60,23 @@ class PrefsService {
       await prefs.setString('active_program_id', id);
     }
   }
+
+  Future<Map<String, dynamic>?> getActiveSession() async {
+    final prefs = await SharedPreferences.getInstance();
+    final programId = prefs.getString('session_program_id');
+    final dayIndex = prefs.getInt('session_day_index');
+    if (programId == null) return null;
+    return {'programId': programId, 'dayIndex': dayIndex ?? 0};
+  }
+
+  Future<void> setActiveSession(String? programId, int? dayIndex) async {
+    final prefs = await SharedPreferences.getInstance();
+    if (programId == null) {
+      await prefs.remove('session_program_id');
+      await prefs.remove('session_day_index');
+    } else {
+      await prefs.setString('session_program_id', programId);
+      await prefs.setInt('session_day_index', dayIndex ?? 0);
+    }
+  }
 }

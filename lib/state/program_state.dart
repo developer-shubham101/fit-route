@@ -2,6 +2,8 @@ import 'package:fit_route/state/app_state.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/program.dart';
 import '../services/program_service.dart';
+import '../services/prefs_service.dart';
+import 'app_state.dart';
 
 final programServiceProvider =
     Provider<ProgramService>((ref) => ProgramService());
@@ -134,6 +136,41 @@ final activeProgramProvider = Provider<Program?>((ref) {
     return null;
   }
 });
+
+// ── Active session ───────────────────────────────────────────────────────────
+class ActiveSession {
+  final String programId;
+  final int dayIndex;
+  const ActiveSession(this.programId, this.dayIndex);
+}
+
+final activeSessionProvider =
+    StateNotifierProvider<ActiveSessionNotifier, ActiveSession?>(
+        (ref) => ActiveSessionNotifier(ref));
+
+class ActiveSessionNotifier extends StateNotifier<ActiveSession?> {
+  final Ref ref;
+  ActiveSessionNotifier(this.ref) : super(null) {
+    _load();
+  }
+
+  Future<void> _load() async {
+    final data = await ref.read(prefsServiceProvider).getActiveSession();
+    if (data != null) {
+      state = ActiveSession(data['programId'], data['dayIndex']);
+    }
+  }
+
+  Future<void> start(String programId, int dayIndex) async {
+    await ref.read(prefsServiceProvider).setActiveSession(programId, dayIndex);
+    state = ActiveSession(programId, dayIndex);
+  }
+
+  Future<void> clear() async {
+    await ref.read(prefsServiceProvider).setActiveSession(null, null);
+    state = null;
+  }
+}
 
 // keep legacy provider used by trends_screen
 final programSearchProvider = StateProvider<String>((ref) => '');

@@ -4,9 +4,31 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../models/program.dart';
 import '../../models/workout_entry.dart';
 import '../../state/workout_state.dart';
+import '../../state/program_state.dart';
 import '../../state/app_state.dart';
 import '../../utils/units.dart';
 
+// ── Weight presets (kg) ───────────────────────────────────────────────────────
+const _weightSteps = [
+  0.0, 2.5, 5.0, 7.5, 10.0, 12.5, 15.0, 17.5, 20.0, 22.5, 25.0,
+  27.5, 30.0, 35.0, 40.0, 45.0, 50.0, 55.0, 60.0, 70.0, 80.0, 90.0, 100.0,
+];
+
+double _prevWeight(double kg) {
+  for (int i = _weightSteps.length - 1; i >= 0; i--) {
+    if (_weightSteps[i] < kg - 0.01) return _weightSteps[i];
+  }
+  return 0.0;
+}
+
+double _nextWeight(double kg) {
+  for (final w in _weightSteps) {
+    if (w > kg + 0.01) return w;
+  }
+  return kg + 2.5;
+}
+
+// ── Main session screen ───────────────────────────────────────────────────────
 class ProgramSessionScreen extends ConsumerStatefulWidget {
   final Program program;
   final int dayIndex;
@@ -19,34 +41,26 @@ class ProgramSessionScreen extends ConsumerStatefulWidget {
 }
 
 class _ProgramSessionScreenState extends ConsumerState<ProgramSessionScreen> {
-  // workout timer
   Timer? _workoutTimer;
   int _workoutElapsed = 0;
-
-  // rest timer
-  Timer? _restTimer;
-  int _restRemaining = 0;
-  bool _restActive = false;
-
-  // actual sets per exercise: Map<exerciseIndex, List<_ActualSet>>
-  late Map<int, List<_ActualSet>> _actualSets;
   String _units = 'metric';
+
+  // today's logged entries keyed by exerciseId
+  Map<String, List<WorkoutEntry>> _todayByEx = {};
 
   ProgramDay get _day => widget.program.days[widget.dayIndex];
 
   @override
   void initState() {
     super.initState();
-    _actualSets = {
-      for (int i = 0; i < _day.exercises.length; i++)
-        i: List.generate(
-          _day.exercises[i].targetSets,
-          (_) => _ActualSet(),
-        ),
-    };
-    _workoutTimer = Timer.periodic(const Duration(seconds: 1),
+    _workoutTimer = Timer.periodic(
+        const Duration(seconds: 1),
         (_) => mounted ? setState(() => _workoutElapsed++) : null);
     _loadUnits();
+    // persist session so dashboard can resume
+    ref
+        .read(activeSessionProvider.notifier)
+        .start(widget.program.id, widget.dayIndex);
   }
 
   Future<void> _loadUnits() async {
@@ -57,245 +71,105 @@ class _ProgramSessionScreenState extends ConsumerState<ProgramSessionScreen> {
   @override
   void dispose() {
     _workoutTimer?.cancel();
-    _restTimer?.cancel();
-    for (final sets in _actualSets.values) {
-      for (final s in sets) {
-        s.dispose();
-      }
-    }
     super.dispose();
   }
 
   String _fmt(int s) =>
       '${(s ~/ 60).toString().padLeft(2, '0')}:${(s % 60).toString().padLeft(2, '0')}';
 
-  void _startRest(int seconds) {
-    _restTimer?.cancel();
-    setState(() {
-      _restActive = true;
-      _restRemaining = seconds;
-    });
-    _restTimer = Timer.periodic(const Duration(seconds: 1), (_) {
-      if (_restRemaining <= 1) {
-        _restTimer?.cancel();
-        if (mounted) setState(() => _restActive = false);
-      } else {
-        if (mounted) setState(() => _restRemaining--);
+  void _refreshTodayEntries(List<WorkoutEntry> all) {
+    final today = DateTime.now();
+    final start = DateTime(today.year, today.month, today.day);
+    final end = start.add(const Duration(days: 1));
+    final programId = widget.program.id;
+    _todayByEx = {};
+    for (final e in all) {
+      final t = e.timestamp.toLocal();
+      if (e.routineId == programId && !t.isBefore(start) && t.isBefore(end)) {
+        _todayByEx.putIfAbsent(e.exerciseId, () => []).add(e);
       }
-    });
+    }
   }
 
-  void _stopRest() {
-    _restTimer?.cancel();
-    setState(() => _restActive = false);
-  }
-
-  Future<void> _saveSet(int exIdx, int setIdx) async {
-    final ex = _day.exercises[exIdx];
-    final set = _actualSets[exIdx]![setIdx];
-    final reps = int.tryParse(set.repsCtrl.text.trim()) ?? 0;
-    if (reps <= 0) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(const SnackBar(content: Text('Enter reps')));
-      return;
-    }
-    double? weightKg;
-    final wDisplay = double.tryParse(set.weightCtrl.text.trim());
-    if (wDisplay != null && wDisplay > 0) {
-      weightKg = UnitsUtil.toKg(wDisplay, _units);
-    }
-
-    final entry = WorkoutEntry(
-      id: '${DateTime.now().millisecondsSinceEpoch}_${exIdx}_$setIdx',
-      exerciseId: ex.exerciseId,
-      exerciseName: ex.exerciseName,
-      routineId: widget.program.id,
-      type: weightKg != null ? 'External' : 'Bodyweight',
-      externalWeight: weightKg,
-      reps: reps,
-      timestamp: DateTime.now().toUtc(),
-      durationSeconds: _workoutElapsed,
-    );
-    await ref.read(entriesProvider.notifier).addEntry(entry);
-    setState(() => set.saved = true);
-    _startRest(ex.targetRestSeconds);
-  }
-
-  int get _totalSets =>
-      _actualSets.values.fold(0, (acc, sets) => acc + sets.length);
-
-  int get _savedSets => _actualSets.values
-      .fold(0, (acc, sets) => acc + sets.where((s) => s.saved).length);
-
-  Future<void> _finish() async {
-    if (_savedSets == 0) {
-      final go = await showDialog<bool>(
-        context: context,
-        builder: (_) => AlertDialog(
-          title: const Text('No sets saved'),
-          content: const Text('Finish without saving any sets?'),
-          actions: [
-            TextButton(
-                onPressed: () => Navigator.pop(context, false),
-                child: const Text('Cancel')),
-            ElevatedButton(
-                onPressed: () => Navigator.pop(context, true),
-                child: const Text('Discard')),
-          ],
-        ),
-      );
-      if (go != true) return;
-    } else {
-      await _showSummary();
-    }
+  Future<void> _finishSession() async {
+    await ref.read(activeSessionProvider.notifier).clear();
     if (mounted) Navigator.pop(context);
-  }
-
-  Future<void> _showSummary() async {
-    final unitLabel = UnitsUtil.unitLabel(_units);
-    await showDialog(
-      context: context,
-      builder: (_) => AlertDialog(
-        title: const Text('Session Summary'),
-        content: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text('Program: ${widget.program.name}'),
-              Text('Day: ${_day.name}'),
-              Text('Duration: ${_fmt(_workoutElapsed)}'),
-              Text('Sets completed: $_savedSets / $_totalSets'),
-              const Divider(),
-              for (int i = 0; i < _day.exercises.length; i++) ...[
-                Text(_day.exercises[i].exerciseName,
-                    style: const TextStyle(fontWeight: FontWeight.bold)),
-                for (int j = 0; j < _actualSets[i]!.length; j++)
-                  if (_actualSets[i]![j].saved)
-                    Builder(builder: (_) {
-                      final set = _actualSets[i]![j];
-                      final ex = _day.exercises[i];
-                      final actualReps =
-                          int.tryParse(set.repsCtrl.text) ?? 0;
-                      final actualW =
-                          double.tryParse(set.weightCtrl.text);
-                      final targetW = ex.targetWeightKg != null
-                          ? UnitsUtil.fromKg(ex.targetWeightKg!, _units)
-                          : null;
-                      final repsOk = actualReps >= ex.targetReps;
-                      final wOk = targetW == null ||
-                          (actualW != null && actualW >= targetW);
-                      return Padding(
-                        padding: const EdgeInsets.only(left: 12, top: 2),
-                        child: Row(children: [
-                          Icon(
-                              repsOk && wOk
-                                  ? Icons.check_circle
-                                  : Icons.cancel,
-                              size: 14,
-                              color: repsOk && wOk
-                                  ? Colors.green
-                                  : Colors.orange),
-                          const SizedBox(width: 4),
-                          Text(
-                              'Set ${j + 1}: $actualReps reps'
-                              '${actualW != null ? ' @ ${actualW.toStringAsFixed(0)} $unitLabel' : ''}',
-                              style: const TextStyle(fontSize: 13)),
-                          const SizedBox(width: 4),
-                          Text(
-                              '(target: ${ex.targetReps} reps'
-                              '${targetW != null ? ' @ ${targetW.toStringAsFixed(0)} $unitLabel' : ''})',
-                              style: const TextStyle(
-                                  fontSize: 11, color: Colors.grey)),
-                        ]),
-                      );
-                    }),
-                const SizedBox(height: 4),
-              ],
-            ],
-          ),
-        ),
-        actions: [
-          ElevatedButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text('Done')),
-        ],
-      ),
-    );
   }
 
   @override
   Widget build(BuildContext context) {
-    final unitLabel = UnitsUtil.unitLabel(_units);
+    final allEntries = ref.watch(entriesProvider);
+    _refreshTodayEntries(allEntries);
 
     return Scaffold(
       appBar: AppBar(
         title: Text('${widget.program.name} · ${_day.name}'),
         actions: [
-          if (_restActive)
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(_fmt(_restRemaining),
-                      style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: Theme.of(context).colorScheme.inversePrimary)),
-                  GestureDetector(
-                    onTap: _stopRest,
-                    child: const Text('skip rest',
-                        style: TextStyle(fontSize: 10, color: Colors.white70)),
-                  ),
-                ],
-              ),
-            )
-          else
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(_fmt(_workoutElapsed),
-                      style: const TextStyle(fontSize: 16)),
-                  const Text('elapsed',
-                      style: TextStyle(fontSize: 10, color: Colors.white70)),
-                ],
-              ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(_fmt(_workoutElapsed),
+                    style: const TextStyle(
+                        fontSize: 16, fontWeight: FontWeight.bold)),
+                const Text('elapsed',
+                    style: TextStyle(fontSize: 10, color: Colors.white70)),
+              ],
             ),
+          ),
         ],
       ),
-      body: ListView.builder(
+      body: ListView.separated(
         padding: const EdgeInsets.all(12),
-        itemCount: _day.exercises.length,
-        itemBuilder: (context, exIdx) {
-          final ex = _day.exercises[exIdx];
-          final sets = _actualSets[exIdx]!;
-          final allSaved = sets.every((s) => s.saved);
-          final targetWDisplay = ex.targetWeightKg != null
-              ? UnitsUtil.fromKg(ex.targetWeightKg!, _units)
+        itemCount: _day.exercises.length + 1,
+        separatorBuilder: (_, __) => const SizedBox(height: 8),
+        itemBuilder: (context, idx) {
+          if (idx == _day.exercises.length) {
+            // finish button at bottom
+            return Padding(
+              padding: const EdgeInsets.symmetric(vertical: 16),
+              child: ElevatedButton.icon(
+                onPressed: _finishSession,
+                icon: const Icon(Icons.done_all),
+                label: const Text('Finish Session'),
+                style: ElevatedButton.styleFrom(
+                    minimumSize: const Size.fromHeight(48)),
+              ),
+            );
+          }
+          final ex = _day.exercises[idx];
+          final doneSets = _todayByEx[ex.exerciseId] ?? [];
+          final targetWKg = ex.targetWeightKg;
+          final targetWDisplay = targetWKg != null
+              ? UnitsUtil.fromKg(targetWKg, _units)
               : null;
+          final unitLabel = UnitsUtil.unitLabel(_units);
+          final allDone = doneSets.length >= ex.targetSets;
 
           return Card(
-            margin: const EdgeInsets.symmetric(vertical: 6),
             child: Padding(
               padding: const EdgeInsets.all(12),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Row(children: [
-                    Expanded(
-                      child: Text(ex.exerciseName,
-                          style: const TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.bold)),
-                    ),
-                    if (allSaved)
-                      const Icon(Icons.check_circle, color: Colors.green),
-                  ]),
+                  // ── exercise header ──
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text(ex.exerciseName,
+                            style: const TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.bold)),
+                      ),
+                      if (allDone)
+                        const Icon(Icons.check_circle,
+                            color: Colors.green, size: 20),
+                    ],
+                  ),
+                  const SizedBox(height: 2),
                   Text(
-                    'Target: ${ex.targetSets} × ${ex.targetReps}'
-                    '${targetWDisplay != null ? ' @ ${targetWDisplay.toStringAsFixed(0)} $unitLabel' : ''}  •  Rest: ${ex.targetRestSeconds}s',
+                    'Target: ${ex.targetSets} sets × ${ex.targetReps} reps'
+                    '${targetWDisplay != null ? ' @ ${targetWDisplay.toStringAsFixed(1)} $unitLabel' : ''}',
                     style: const TextStyle(fontSize: 12, color: Colors.grey),
                   ),
                   if (ex.notes.isNotEmpty)
@@ -305,89 +179,56 @@ class _ProgramSessionScreenState extends ConsumerState<ProgramSessionScreen> {
                             fontStyle: FontStyle.italic,
                             color: Colors.grey)),
                   const SizedBox(height: 8),
-                  // sets header
-                  Row(children: [
-                    const SizedBox(
-                        width: 32,
-                        child: Text('Set',
-                            style: TextStyle(
-                                fontSize: 11, fontWeight: FontWeight.bold))),
-                    const SizedBox(width: 8),
-                    Expanded(
-                        child: Text('Reps (target: ${ex.targetReps})',
-                            style: const TextStyle(fontSize: 11))),
-                    const SizedBox(width: 8),
-                    Expanded(
-                        child: Text(
-                            'Weight $unitLabel${targetWDisplay != null ? ' (${targetWDisplay.toStringAsFixed(0)})' : ''}',
-                            style: const TextStyle(fontSize: 11))),
-                    const SizedBox(width: 48),
-                  ]),
-                  for (int si = 0; si < sets.length; si++)
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 3),
-                      child: Row(children: [
-                        SizedBox(
-                          width: 32,
-                          child: Text('${si + 1}',
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: sets[si].saved
-                                      ? Colors.green
-                                      : null)),
-                        ),
-                        const SizedBox(width: 8),
-                        Expanded(
-                          child: TextField(
-                            controller: sets[si].repsCtrl,
-                            keyboardType: TextInputType.number,
-                            enabled: !sets[si].saved,
-                            decoration: const InputDecoration(
-                                isDense: true, hintText: 'reps'),
+                  // ── completed sets for today ──
+                  if (doneSets.isNotEmpty) ...[
+                    const Text('Completed today:',
+                        style: TextStyle(
+                            fontSize: 12, fontWeight: FontWeight.w600)),
+                    const SizedBox(height: 4),
+                    Wrap(
+                      spacing: 6,
+                      runSpacing: 4,
+                      children: doneSets.asMap().entries.map((e) {
+                        final s = e.value;
+                        final w = s.externalWeight != null
+                            ? UnitsUtil.fromKg(s.externalWeight!, _units)
+                            : null;
+                        return Chip(
+                          label: Text(
+                            'Set ${e.key + 1}: ${s.reps} reps'
+                            '${w != null ? ' @ ${w.toStringAsFixed(1)} $unitLabel' : ''}',
+                            style: const TextStyle(fontSize: 11),
                           ),
-                        ),
-                        const SizedBox(width: 8),
-                        Expanded(
-                          child: TextField(
-                            controller: sets[si].weightCtrl,
-                            keyboardType:
-                                const TextInputType.numberWithOptions(
-                                    decimal: true),
-                            enabled: !sets[si].saved,
-                            decoration: InputDecoration(
-                                isDense: true, hintText: unitLabel),
-                          ),
-                        ),
-                        const SizedBox(width: 8),
-                        SizedBox(
-                          width: 48,
-                          child: sets[si].saved
-                              ? const Icon(Icons.check_circle,
-                                  color: Colors.green, size: 20)
-                              : ElevatedButton(
-                                  onPressed: () => _saveSet(exIdx, si),
-                                  style: ElevatedButton.styleFrom(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 4)),
-                                  child: const Text('✓',
-                                      style: TextStyle(fontSize: 13)),
-                                ),
-                        ),
-                      ]),
+                          backgroundColor: Colors.green.withOpacity(0.15),
+                          side: const BorderSide(color: Colors.green),
+                        );
+                      }).toList(),
                     ),
-                  // add extra set
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: TextButton.icon(
-                      onPressed: () =>
-                          setState(() => sets.add(_ActualSet())),
-                      icon: const Icon(Icons.add, size: 14),
-                      label: const Text('Add set',
-                          style: TextStyle(fontSize: 12)),
-                      style: TextButton.styleFrom(
-                          padding: EdgeInsets.zero,
-                          minimumSize: Size.zero,
-                          tapTargetSize: MaterialTapTargetSize.shrinkWrap),
+                    const SizedBox(height: 8),
+                  ],
+                  // ── start set button ──
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton.icon(
+                      onPressed: () => _openSetEntry(
+                        context,
+                        ex,
+                        doneSets.length + 1,
+                        targetWKg,
+                      ),
+                      icon: const Icon(Icons.play_arrow, size: 18),
+                      label: Text(doneSets.isEmpty
+                          ? 'Start Set 1'
+                          : allDone
+                              ? 'Add Extra Set'
+                              : 'Start Set ${doneSets.length + 1}'),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: allDone
+                            ? Colors.grey.shade600
+                            : Theme.of(context).colorScheme.primary,
+                        padding:
+                            const EdgeInsets.symmetric(vertical: 10),
+                      ),
                     ),
                   ),
                 ],
@@ -396,27 +237,373 @@ class _ProgramSessionScreenState extends ConsumerState<ProgramSessionScreen> {
           );
         },
       ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: _finish,
-        icon: const Icon(Icons.done_all),
-        label: Text('Finish ($_savedSets/$_totalSets)'),
+    );
+  }
+
+  Future<void> _openSetEntry(
+    BuildContext context,
+    ProgramExercise ex,
+    int setNumber,
+    double? targetWeightKg,
+  ) async {
+    final result = await Navigator.push<_SetResult>(
+      context,
+      MaterialPageRoute(
+        builder: (_) => _SetEntryScreen(
+          exerciseName: ex.exerciseName,
+          setNumber: setNumber,
+          targetReps: ex.targetReps,
+          targetWeightKg: targetWeightKg,
+          restSeconds: ex.targetRestSeconds,
+          units: _units,
+        ),
+      ),
+    );
+    if (result == null || !mounted) return;
+
+    final entry = WorkoutEntry(
+      id: '${DateTime.now().millisecondsSinceEpoch}_${ex.exerciseId}_$setNumber',
+      exerciseId: ex.exerciseId,
+      exerciseName: ex.exerciseName,
+      routineId: widget.program.id,
+      type: result.weightKg != null ? 'External' : 'Bodyweight',
+      externalWeight: result.weightKg,
+      reps: result.reps,
+      timestamp: DateTime.now().toUtc(),
+      durationSeconds: result.durationSeconds,
+    );
+    await ref.read(entriesProvider.notifier).addEntry(entry);
+  }
+}
+
+// ── Set entry screen (timer + stepper UX) ────────────────────────────────────
+class _SetResult {
+  final int reps;
+  final double? weightKg;
+  final int durationSeconds;
+  const _SetResult(this.reps, this.weightKg, this.durationSeconds);
+}
+
+class _SetEntryScreen extends StatefulWidget {
+  final String exerciseName;
+  final int setNumber;
+  final int targetReps;
+  final double? targetWeightKg;
+  final int restSeconds;
+  final String units;
+
+  const _SetEntryScreen({
+    required this.exerciseName,
+    required this.setNumber,
+    required this.targetReps,
+    required this.targetWeightKg,
+    required this.restSeconds,
+    required this.units,
+  });
+
+  @override
+  State<_SetEntryScreen> createState() => _SetEntryScreenState();
+}
+
+class _SetEntryScreenState extends State<_SetEntryScreen> {
+  Timer? _setTimer;
+  Timer? _restTimer;
+  int _elapsed = 0;
+  int _restRemaining = 0;
+
+  bool _started = false;
+  bool _finished = false;
+  bool _resting = false;
+
+  late int _reps;
+  late double _weightKg;
+
+  String get _unitLabel => UnitsUtil.unitLabel(widget.units);
+
+  @override
+  void initState() {
+    super.initState();
+    _reps = widget.targetReps;
+    _weightKg = widget.targetWeightKg ?? 0.0;
+  }
+
+  @override
+  void dispose() {
+    _setTimer?.cancel();
+    _restTimer?.cancel();
+    super.dispose();
+  }
+
+  String _fmt(int s) =>
+      '${(s ~/ 60).toString().padLeft(2, '0')}:${(s % 60).toString().padLeft(2, '0')}';
+
+  void _startSet() {
+    setState(() => _started = true);
+    _setTimer = Timer.periodic(
+        const Duration(seconds: 1),
+        (_) => mounted ? setState(() => _elapsed++) : null);
+  }
+
+  void _endSet() {
+    _setTimer?.cancel();
+    setState(() => _finished = true);
+  }
+
+  void _startRest() {
+    setState(() {
+      _resting = true;
+      _restRemaining = widget.restSeconds;
+    });
+    _restTimer = Timer.periodic(const Duration(seconds: 1), (_) {
+      if (_restRemaining <= 1) {
+        _restTimer?.cancel();
+        if (mounted) setState(() => _resting = false);
+      } else {
+        if (mounted) setState(() => _restRemaining--);
+      }
+    });
+  }
+
+  void _skipRest() {
+    _restTimer?.cancel();
+    setState(() => _resting = false);
+  }
+
+  void _submit() {
+    final wKg = _weightKg > 0 ? _weightKg : null;
+    Navigator.pop(context, _SetResult(_reps, wKg, _elapsed));
+  }
+
+  Widget _stepperButton({
+    required String label,
+    required VoidCallback onMinus,
+    required VoidCallback onPlus,
+    required String value,
+  }) {
+    return Column(
+      children: [
+        Text(label,
+            style: const TextStyle(fontSize: 12, color: Colors.grey)),
+        const SizedBox(height: 6),
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            _CircleBtn(icon: Icons.remove, onTap: onMinus),
+            const SizedBox(width: 12),
+            GestureDetector(
+              onTap: () => _editValue(label),
+              child: Container(
+                constraints: const BoxConstraints(minWidth: 80),
+                padding: const EdgeInsets.symmetric(
+                    horizontal: 16, vertical: 10),
+                decoration: BoxDecoration(
+                  border: Border.all(
+                      color: Theme.of(context).colorScheme.primary),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Text(value,
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                        fontSize: 22, fontWeight: FontWeight.bold)),
+              ),
+            ),
+            const SizedBox(width: 12),
+            _CircleBtn(icon: Icons.add, onTap: onPlus),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Future<void> _editValue(String label) async {
+    final isReps = label.toLowerCase().contains('rep');
+    final ctrl = TextEditingController(
+        text: isReps
+            ? '$_reps'
+            : UnitsUtil.fromKg(_weightKg, widget.units)
+                .toStringAsFixed(1));
+    await showDialog(
+      context: context,
+      builder: (_) => AlertDialog(
+        title: Text('Edit $label'),
+        content: TextField(
+          controller: ctrl,
+          keyboardType:
+              const TextInputType.numberWithOptions(decimal: true),
+          autofocus: true,
+          decoration: InputDecoration(
+              labelText: label, suffixText: isReps ? '' : _unitLabel),
+        ),
+        actions: [
+          TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Cancel')),
+          ElevatedButton(
+              onPressed: () {
+                if (isReps) {
+                  final v = int.tryParse(ctrl.text);
+                  if (v != null && v > 0) setState(() => _reps = v);
+                } else {
+                  final v = double.tryParse(ctrl.text);
+                  if (v != null && v >= 0) {
+                    setState(
+                        () => _weightKg = UnitsUtil.toKg(v, widget.units));
+                  }
+                }
+                Navigator.pop(context);
+              },
+              child: const Text('Set')),
+        ],
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final wDisplay = UnitsUtil.fromKg(_weightKg, widget.units);
+    final wLabel = _weightKg > 0
+        ? '${wDisplay.toStringAsFixed(1)} $_unitLabel'
+        : 'Bodyweight';
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('${widget.exerciseName} — Set ${widget.setNumber}'),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(24),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            // ── timer ──
+            Center(
+              child: Column(
+                children: [
+                  Text(
+                    _fmt(_elapsed),
+                    style: TextStyle(
+                      fontSize: 56,
+                      fontWeight: FontWeight.bold,
+                      color: _started && !_finished
+                          ? Theme.of(context).colorScheme.primary
+                          : Colors.grey,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    _started
+                        ? _finished
+                            ? 'Set done'
+                            : 'In progress…'
+                        : 'Tap Start to begin',
+                    style: const TextStyle(color: Colors.grey),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 24),
+
+            // ── start / end button ──
+            if (!_finished)
+              ElevatedButton.icon(
+                onPressed: _started ? _endSet : _startSet,
+                icon: Icon(_started ? Icons.stop : Icons.play_arrow),
+                label: Text(_started ? 'End Set' : 'Start Set'),
+                style: ElevatedButton.styleFrom(
+                  minimumSize: const Size.fromHeight(52),
+                  backgroundColor: _started
+                      ? Colors.redAccent
+                      : Theme.of(context).colorScheme.primary,
+                ),
+              ),
+
+            const SizedBox(height: 32),
+
+            // ── steppers (reps + weight) ──
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                _stepperButton(
+                  label: 'Reps',
+                  onMinus: () =>
+                      setState(() => _reps = (_reps - 1).clamp(1, 999)),
+                  onPlus: () => setState(() => _reps++),
+                  value: '$_reps',
+                ),
+                _stepperButton(
+                  label: 'Weight ($_unitLabel)',
+                  onMinus: () => setState(
+                      () => _weightKg = _prevWeight(_weightKg)),
+                  onPlus: () =>
+                      setState(() => _weightKg = _nextWeight(_weightKg)),
+                  value: wLabel,
+                ),
+              ],
+            ),
+
+            const SizedBox(height: 24),
+
+            // ── rest timer ──
+            if (_finished && widget.restSeconds > 0) ...[
+              if (_resting)
+                Column(
+                  children: [
+                    Text('Rest: ${_fmt(_restRemaining)}',
+                        style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: Theme.of(context).colorScheme.primary)),
+                    TextButton(
+                        onPressed: _skipRest,
+                        child: const Text('Skip rest')),
+                  ],
+                )
+              else
+                OutlinedButton.icon(
+                  onPressed: _startRest,
+                  icon: const Icon(Icons.timer_outlined),
+                  label: Text('Rest ${widget.restSeconds}s'),
+                ),
+              const SizedBox(height: 16),
+            ],
+
+            const Spacer(),
+
+            // ── submit ──
+            ElevatedButton(
+              onPressed: _submit,
+              style: ElevatedButton.styleFrom(
+                  minimumSize: const Size.fromHeight(52)),
+              child: Text(
+                  'Submit — $_reps reps  ${_weightKg > 0 ? '@ $wLabel' : '(bodyweight)'}'),
+            ),
+          ],
+        ),
       ),
     );
   }
 }
 
-class _ActualSet {
-  final TextEditingController repsCtrl;
-  final TextEditingController weightCtrl;
-  bool saved;
+class _CircleBtn extends StatelessWidget {
+  final IconData icon;
+  final VoidCallback onTap;
+  const _CircleBtn({required this.icon, required this.onTap});
 
-  _ActualSet()
-      : repsCtrl = TextEditingController(),
-        weightCtrl = TextEditingController(),
-        saved = false;
-
-  void dispose() {
-    repsCtrl.dispose();
-    weightCtrl.dispose();
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      borderRadius: BorderRadius.circular(24),
+      onTap: onTap,
+      child: Container(
+        width: 40,
+        height: 40,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          border:
+              Border.all(color: Theme.of(context).colorScheme.primary),
+        ),
+        child: Icon(icon,
+            size: 20, color: Theme.of(context).colorScheme.primary),
+      ),
+    );
   }
 }
